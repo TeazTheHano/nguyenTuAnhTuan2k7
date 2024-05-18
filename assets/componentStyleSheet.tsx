@@ -68,3 +68,22 @@ export class Gradient2 extends Component<{ children: ReactNode, style?: any }> {
         );
     }
 }
+
+export class OpacityGradientView extends Component<({ children: ReactNode, style?: any })> {
+    render(): ReactNode {
+        const gradientColors = ['rgba(255, 255, 255, 0.01)', 'rgba(255, 255, 255, 0.2)', 'rgba(255, 255, 255, 0.5)', 'rgba(255, 255, 255, 0.2)', 'rgba(255, 255, 255, 0.01)'];
+        const gradientLocations = [0, 0.2, 0.5, 0.8, 1]; // Adjust these values for finer control
+        const { children, style } = this.props;
+
+        return (
+            <LinearGradient
+                start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                colors={gradientColors}
+                locations={gradientLocations}
+                style={[style]}
+            >
+                {children}
+            </LinearGradient>
+        );
+    }
+};

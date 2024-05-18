@@ -1,5 +1,5 @@
 // system imports
-import React, { Component, useState } from "react";
+import React, { Component, useEffect, useRef, useState } from "react";
 import { Text, View, TextInput, TouchableOpacity, Image, FlatList, ImageBackground, Alert, Share } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { Dimensions } from "react-native";
