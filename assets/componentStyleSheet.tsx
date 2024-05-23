@@ -13,7 +13,7 @@ const colorStyle = StyleSheet.create<any>({
     main3: '#A5DEDF',
     main4: '#438CAF',
     main5: '#DBB906',
-    fillBlur: 'rgba(0, 0, 0, 0.2)',
+    fillBlur: 'rgba(239, 239, 239, 0.2)',
 });
 
 export default colorStyle;
@@ -27,18 +27,20 @@ export const componentStyle = StyleSheet.create<any>({
         fontSize: vw(4),
     },
 
-    outerGlow: {
-        textShadowColor: 'rgba(255, 255, 255, 0.7)',
-        textShadowOffset: { width: -vw(0.25), height: -vw(1) },
-        textShadowRadius: vw(2),
-        elevation: vw(2),
+    outerGlowL1T1White: {
+        backgroundColor: 'white',
+        shadowOffset: { width: -1, height: -1 },
+        shadowOpacity: 0.5,
+        shadowRadius: 4,
+        shadowColor: '#ccc',
     },
+
+
 });
 
 export class Gradient1 extends Component<{ children: ReactNode, style?: any }> {
     render() {
         const { children, style } = this.props;
-
         return (
             <LinearGradient
                 start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}

@@ -8,7 +8,7 @@ import { femaleIcon, leftArrow, maleIcon, rightArrow } from '../assets/svgXml'
 import { SvgXml } from 'react-native-svg'
 import storage from '../data/storageFunc'
 
-export default function OnBoarding() {
+export default function Login() {
   const navigation = useNavigation()
 
   const [isExist, setIsExist] = useState<boolean | null>(null)
@@ -26,7 +26,7 @@ export default function OnBoarding() {
       autoSync: true,
       syncInBackground: true,
     }).then(res => {
-      res.name ? navigation.navigate('Home') : setIsExist(false)
+      res.name ? navigation.navigate('Tab') : setIsExist(false)
     })
       .catch(err => {
         console.log(err)
@@ -48,7 +48,7 @@ export default function OnBoarding() {
       })
     }
     saveUserInfo().then(() => {
-      navigation.navigate('Home')
+      navigation.navigate('Tab')
     }
     )
   }
@@ -89,7 +89,7 @@ export default function OnBoarding() {
                 renderItem={({ item }) => (
                   <View style={[styles.alignSelfCenter,]}>
                     {useStateTarget == item ?
-                      <View style={[styles.flexColCenter, styles.boxsizingBorderBox, styles.h30vw, componentStyle.outerGlow, { width: ITEM_WIDTH }]}>
+                      <View style={[styles.flexColCenter, styles.boxsizingBorderBox, styles.h30vw, componentStyle.outerGlowL1T1White, { width: ITEM_WIDTH }]}>
                         <Signika20Bold style={{ color: 'white', fontSize: vw(10) }}>{item}</Signika20Bold>
                       </View>
                       :
@@ -129,7 +129,7 @@ export default function OnBoarding() {
               onPress={() => setSex(1)}
               style={[styles.alignSelfCenter]}>
               {sex == 1 ?
-                <Gradient1 style={[styles.flexColCenter, styles.gap2vw, styles.w30vw, styles.h30vw, styles.borderRadius16, styles.padding2vw, styles.marginTop4vw, componentStyle.outerGlow]}>
+                <Gradient1 style={[styles.flexColCenter, styles.gap2vw, styles.w30vw, styles.h30vw, styles.borderRadius16, styles.padding2vw, styles.marginTop4vw, componentStyle.outerGlowL1T1White]}>
                   {femaleIcon(vw(10), vw(17.5), colorStyle.white)}
                   <Signika20Bold style={{ color: colorStyle.white }}>Nữ</Signika20Bold>
                 </Gradient1>
@@ -144,7 +144,7 @@ export default function OnBoarding() {
               onPress={() => setSex(2)}
               style={[styles.alignSelfCenter]}>
               {sex == 2 ?
-                <Gradient1 style={[styles.flexColCenter, styles.gap2vw, styles.w30vw, styles.h30vw, styles.borderRadius16, styles.padding2vw, styles.marginTop4vw, componentStyle.outerGlow]}>
+                <Gradient1 style={[styles.flexColCenter, styles.gap2vw, styles.w30vw, styles.h30vw, styles.borderRadius16, styles.padding2vw, styles.marginTop4vw, componentStyle.outerGlowL1T1White]}>
                   {maleIcon(vw(15), vw(17.5), colorStyle.white)}
                   <Signika20Bold style={{ color: colorStyle.white }}>Nam</Signika20Bold>
                 </Gradient1>

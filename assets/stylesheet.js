@@ -487,6 +487,10 @@ const styles = StyleSheet.create({
         padding: vw(4),
     },
 
+    padding3vw: {
+        padding: vw(3),
+    },
+
     padding2vw: {
         padding: vw(2),
     },
@@ -555,6 +559,10 @@ const styles = StyleSheet.create({
         paddingBottom: vw(1),
     },
 
+    paddingH10vw: {
+        paddingHorizontal: vw(10),
+    },
+
     paddingH8vw: {
         paddingHorizontal: vw(8),
     },
@@ -583,7 +591,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: vw(1),
     },
 
-    paddingH10vw: {
+    paddingH10: {
         paddingHorizontal: vw(2.5),
     },
 
@@ -610,6 +618,10 @@ const styles = StyleSheet.create({
 
     borderRadius10: {
         borderRadius: vw(2.5),
+    },
+
+    borderRadius3vw: {
+        borderRadius: vw(3),
     },
 
     borderRadius100: {
@@ -722,6 +734,10 @@ const styles = StyleSheet.create({
 
     gap4vw: {
         gap: vw(4),
+    },
+
+    gap3vw: {
+        gap: vw(3),
     },
 
     gap2vw: {
