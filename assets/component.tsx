@@ -21,9 +21,9 @@ import { Nunito14Reg, Nunito16Bold, Nunito18Bold, Signika20Bold } from "./Class"
 let { width, height } = Dimensions.get('window');
 
 
-export const marginBottomForScrollView = () => {
+export const marginBottomForScrollView = (time?: number) => {
     return (
-        <View style={{ height: vh(5), opacity: 0 }}></View>
+        <View style={{ height: vh(time ? 5 * time : 5), opacity: 0 }}></View>
     )
 }
 
@@ -89,36 +89,36 @@ export const NavNavigation = (title: string) => {
     )
 }
 
-export const UlList = (data: Array<string | string[]>, FontClass1st: ComponentType<any>, FontClass2nd: ComponentType<any> = FontClass1st, bullet1st: string, bullet2nd: string, textIndent2nd: any = 0) => {
+export const UlList = (data: string | Array<string | string[]>, FontClass1st: ComponentType<any>, FontClass2nd: ComponentType<any> = FontClass1st, bullet1st: string = '1', bullet2nd: string = '-', textIndent2nd: any = 0) => {
     function bulletMark(bullet: string, index: number) {
-
+        let i = index == 0 ? 0 : index % 2 == 0 ? index / 2 : index
         if (bullet === 'a') {
-            function abullet(index: number) {
+            function abullet(i: number) {
                 let charNum = 26, charStart = 97
-                let char = String.fromCharCode(charStart + index % charNum)
-                if (index >= charNum) {
-                    return String.fromCharCode(charStart + Math.floor(index / charNum) - 1) + char + '.'
+                let char = String.fromCharCode(charStart + i % charNum)
+                if (i >= charNum) {
+                    return String.fromCharCode(charStart + Math.floor(i / charNum) - 1) + char + '.'
                 } else {
                     return char + '.'
                 }
             }
-            return abullet(index)
+            return abullet(i)
 
         } else if (bullet === 'A') {
-            function Abullet(index: number) {
+            function Abullet(i: number) {
                 let charNum = 26, charStart = 65
-                let char = String.fromCharCode(charStart + index % charNum)
-                if (index >= charNum) {
-                    return String.fromCharCode(charStart + Math.floor(index / charNum) - 1) + char + '.'
+                let char = String.fromCharCode(charStart + i % charNum)
+                if (i >= charNum) {
+                    return String.fromCharCode(charStart + Math.floor(i / charNum) - 1) + char + '.'
                 } else {
                     return char + '.'
                 }
             }
-            return Abullet(index)
+            return Abullet(i)
 
         } else if (bullet === 'I') {
             // make bullet as a roman number
-            function Ibullet(index: number) {
+            function Ibullet(i: number) {
                 let romanNum = {
                     1: 'I',
                     2: 'II',
@@ -138,14 +138,14 @@ export const UlList = (data: Array<string | string[]>, FontClass1st: ComponentTy
                 }
 
                 let roman = ''
-                let num = index + 1
+                let num = i + 1
                 let romanNumArr = Object.keys(romanNum).map(Number).sort((a, b) => b - a)
 
             }
-            return Ibullet(index)
+            return Ibullet(i)
 
         } else if (bullet === '1') {
-            return index + 1 + '.'
+            return i + 1 + '.'
 
         } else {
             return bullet
@@ -155,29 +155,33 @@ export const UlList = (data: Array<string | string[]>, FontClass1st: ComponentTy
 
     return (
         <View>
-            {data.map((item, index) => {
-                if (typeof item === 'string') {
-                    return (
-                        <View key={index} style={[styles.flexRowStartCenter]}>
-                            <FontClass1st style={{ color: colorStyle.white }}>{bulletMark(bullet1st, index)} </FontClass1st>
-                            <FontClass1st style={{ color: colorStyle.white }}>{item}</FontClass1st>
-                        </View>
-                    )
-                } else if (Array.isArray(item)) {
-                    return (
-                        <View key={index} style={{ paddingLeft: textIndent2nd }}>
-                            {item.map((subItem, subIndex) => {
-                                return (
-                                    <View key={subIndex} style={[styles.flexRowStartCenter]}>
-                                        <FontClass2nd style={{ color: colorStyle.white }}>{bullet2nd} </FontClass2nd>
-                                        <FontClass2nd style={{ color: colorStyle.white }}>{subItem}</FontClass2nd>
-                                    </View>
-                                )
-                            })}
-                        </View>
-                    )
-                }
-            })}
+            {typeof data == 'string' ?
+
+                <FontClass1st style={{ color: colorStyle.white }}>{data}</FontClass1st>
+
+                : data.map((item, index) => {
+                    if (typeof item === 'string') {
+                        return (
+                            <View key={index} style={[styles.flexRow, styles.w100]}>
+                                <FontClass1st style={{ color: colorStyle.white }}>{bulletMark(bullet1st, index)} </FontClass1st>
+                                <FontClass1st style={{ color: colorStyle.white }}>{item}</FontClass1st>
+                            </View>
+                        )
+                    } else if (Array.isArray(item)) {
+                        return (
+                            <View key={index} style={[styles.w100, { paddingLeft: textIndent2nd }]}>
+                                {item.map((subItem, subIndex) => {
+                                    return (
+                                        <View key={subIndex} style={[styles.flexRow]}>
+                                            <FontClass2nd style={{ color: colorStyle.white }}>{bulletMark(bullet2nd, subIndex)} </FontClass2nd>
+                                            <FontClass2nd style={{ color: colorStyle.white }}>{subItem}</FontClass2nd>
+                                        </View>
+                                    )
+                                })}
+                            </View>
+                        )
+                    }
+                })}
         </View>
     )
 }
