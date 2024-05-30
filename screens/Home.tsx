@@ -1,18 +1,21 @@
-import { View, Text, Touchable, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native'
+import { View, Text, Touchable, TouchableOpacity, SafeAreaView, ScrollView, ActivityIndicator } from 'react-native'
 import React, { useEffect } from 'react'
-import storage from '../data/storageFunc'
+import storage, { getAllExerciseCourse } from '../data/storageFunc'
 import colorStyle, { componentStyle, Gradient1, Gradient2 } from '../assets/componentStyleSheet'
 import styles, { vw } from '../assets/stylesheet'
-import { HomeNameBar } from '../assets/component'
-import { coreTraining, homeBoardingPeople, infoIcon, swim1, swim2 } from '../assets/svgXml'
-import { Nunito16Bold, Nunito18Bold, Signika20Bold, Signika24Bold } from '../assets/Class'
+import { HomeNameBar, marginBottomForScrollView } from '../assets/component'
+import { coreTraining, homeBoardingPeople, infoIcon, rightArrow, swim1, swim2 } from '../assets/svgXml'
+import { Nunito12Reg, Nunito16Bold, Nunito18Bold, Signika20Bold, Signika24Bold } from '../assets/Class'
 import { useNavigation } from '@react-navigation/native'
+import { SvgXml } from 'react-native-svg'
 
 export default function Home() {
     const navigation = useNavigation()
 
     const [userName, setUserName] = React.useState<string>('')
     const [age, setAge] = React.useState<number>(0)
+    const [exerciseCourse, setExerciseCourse] = React.useState<any[]>([])
+    const [loaddingExerciseCourse, setLoaddingExerciseCourse] = React.useState<boolean>(true)
 
     useEffect(() => {
         storage.load({
@@ -24,6 +27,13 @@ export default function Home() {
             setAge(res.age)
         }).catch(err => {
             console.log(err)
+        })
+    }, [])
+
+    useEffect(() => {
+        getAllExerciseCourse().then(res => {
+            setExerciseCourse(res)
+            setLoaddingExerciseCourse(false)
         })
     }, [])
 
@@ -51,9 +61,6 @@ export default function Home() {
                                 </View>
                             </View>
                         </TouchableOpacity>
-                        {/* end of banner */}
-
-                        {/* warm up */}
 
                         <View style={[styles.flexRowBetweenCenter, styles.paddingV4vw, styles.marginHorizontal5vw, { borderBottomWidth: 2, borderBottomColor: colorStyle.fillBlur }]}>
                             <View style={[styles.flexRowCenter, styles.gap2vw]}>
@@ -62,7 +69,7 @@ export default function Home() {
                             </View>
                             <TouchableOpacity
                                 style={[componentStyle.outerGlowL1T1White, { borderRadius: vw(3) }]}
-                                onPress={() => { console.log('clicked') }}>
+                                onPress={() => { storage.clearMapForKey('exerciseCourse') }}>
                                 <Gradient2
                                     style={[styles.padding10, { borderRadius: vw(3), }]}>
                                     {infoIcon(vw(6), vw(6))}
@@ -71,12 +78,35 @@ export default function Home() {
                         </View>
 
                         {/* warm up list here */}
-
+                        {exerciseCourse.filter(course => course.category === 1).map((course, index) => {
+                            return (
+                                <View key={index} style={[styles.alignSelfCenter, styles.padding3vw, styles.flexRowBetweenCenter, { backgroundColor: colorStyle.fillBlur, width: vw(84), borderRadius: vw(4.5), paddingRight: vw(5) }]}>
+                                    <View style={[styles.flexRowStartCenter, styles.gap3vw]}>
+                                        <View style={[{ width: vw(15), height: vw(18), backgroundColor: colorStyle.fillBlur, borderRadius: vw(3), padding: vw(1) }]}>
+                                            <SvgXml xml={course.image} width={'100%'} height={'100%'} />
+                                        </View>
+                                        <View>
+                                            <Nunito16Bold style={[{ color: colorStyle.main3, lineHeight: vw(8) }]}>{course.name}</Nunito16Bold>
+                                            <Nunito12Reg style={[{ color: colorStyle.white }]}>{course.step.length} bước | {course.time} phút</Nunito12Reg>
+                                        </View>
+                                    </View>
+                                    <TouchableOpacity
+                                        style={[componentStyle.outerGlowL1T1White, styles.borderRadius100]}
+                                        onPress={() => { navigation.navigate('ExerciseCourse', { cate: 1, index: index }) }}>
+                                        <Gradient2
+                                            style={[styles.padding3vw, styles.borderRadius100]}>
+                                            {rightArrow(vw(6), vw(6), 'white')}
+                                        </Gradient2>
+                                    </TouchableOpacity>
+                                </View>
+                            )
+                        })}
                         {/* end of warm up */}
 
                         {/* training */}
 
                         {/* core training */}
+
                         <View style={[styles.flexRowBetweenCenter, styles.paddingV4vw, styles.marginHorizontal5vw, { borderBottomWidth: 2, borderBottomColor: colorStyle.fillBlur }]}>
                             <View style={[styles.flexRowCenter, styles.gap2vw]}>
                                 {coreTraining(vw(11), vw(11))}
@@ -93,6 +123,29 @@ export default function Home() {
                         </View>
 
                         {/* core training list here */}
+                        {exerciseCourse.filter(course => course.category === 2).map((course, index) => {
+                            return (
+                                <View key={index} style={[styles.alignSelfCenter, styles.padding3vw, styles.flexRowBetweenCenter, { backgroundColor: colorStyle.fillBlur, width: vw(84), borderRadius: vw(4.5), paddingRight: vw(5) }]}>
+                                    <View style={[styles.flexRowStartCenter, styles.gap3vw]}>
+                                        <View style={[{ width: vw(15), height: vw(18), backgroundColor: colorStyle.fillBlur, borderRadius: vw(3), padding: vw(1) }]}>
+                                            <SvgXml xml={course.image} width={'100%'} height={'100%'} />
+                                        </View>
+                                        <View>
+                                            <Nunito16Bold style={[{ color: colorStyle.main3, lineHeight: vw(8) }]}>{course.name}</Nunito16Bold>
+                                            <Nunito12Reg style={[{ color: colorStyle.white }]}>{course.step.length} bước | {course.time} phút</Nunito12Reg>
+                                        </View>
+                                    </View>
+                                    <TouchableOpacity
+                                        style={[componentStyle.outerGlowL1T1White, styles.borderRadius100]}
+                                        onPress={() => { navigation.navigate('ExerciseCourse', { cate: 1, index: index }) }}>
+                                        <Gradient2
+                                            style={[styles.padding3vw, styles.borderRadius100]}>
+                                            {rightArrow(vw(6), vw(6), 'white')}
+                                        </Gradient2>
+                                    </TouchableOpacity>
+                                </View>
+                            )
+                        })}
 
                         {/* end of training */}
 
@@ -101,7 +154,10 @@ export default function Home() {
                         <View style={[styles.flexRowCenter, styles.paddingV4vw, styles.marginHorizontal5vw, { borderBottomWidth: 2, borderBottomColor: colorStyle.fillBlur }]}>
                             <Signika24Bold style={{ color: colorStyle.main3 }}>Tin tức</Signika24Bold>
                         </View>
+                        {/* {loaddingExerciseCourse? <ActivityIndicator/> : <Text style={{color:'white'}}>{JSON.stringify(exerciseCourse)}</Text>} */}
+
                     </View>
+                    {marginBottomForScrollView(4)}
                 </ScrollView>
             </SafeAreaView >
         </Gradient2 >

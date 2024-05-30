@@ -1,6 +1,9 @@
 import Storage from 'react-native-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { get } from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import data from './data';
+
+const exerciseCourse = data().exerciseCourse;
+const quiz = data().quiz;
 
 const storage = new Storage({
   // maximum capacity, default 1000 key-ids
@@ -22,8 +25,53 @@ const storage = new Storage({
   // the latest data.
   sync: {
     // Sync method for retrieving data from the server
-
   },
 });
-
 export default storage;
+
+/**
+ * Saves the exercise course data to storage.
+ * @param exerciseCourse - The exercise course data to be saved.
+ * @param category - The category of the exercise course.
+ * @param index - The index of the exercise course.
+ */
+export const saveExerciseCourse = (
+  exerciseCourse: any,
+  category: Number,
+  index: Number,
+) => {
+  storage.save({
+    key: `exerciseCourse`,
+    data: exerciseCourse,
+    id: `${category}-${index}`,
+    expires: null,
+  });
+
+  console.log(`${exerciseCourse.name} Exercise course ${category}-${index} saved`);
+};
+
+/**
+ * Retrieves the exercise course from storage based on the provided category and index.
+ * @param {Number} category - The category of the exercise course.
+ * @param {Number} index - The index of the exercise course.
+ * @returns {Promise<any>} - A promise that resolves to the exercise course object.
+ */
+export const getExerciseCourse = async (
+  category: Number,
+  index: Number,
+): Promise<any> => {
+  return await storage.load({
+    key: `exerciseCourse`,
+    id: `${category}-${index}`,
+  });
+};
+
+export const getAllExerciseCourse = async () => {
+  return await storage.getAllDataForKey('exerciseCourse');
+}
+
+export const loadDefautExerciseCourse = () => {
+  exerciseCourse.forEach((course, index) => {
+    saveExerciseCourse(course, course.category, index);
+  });
+};

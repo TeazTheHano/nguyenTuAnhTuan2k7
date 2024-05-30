@@ -42,6 +42,14 @@ const styles = StyleSheet.create({
         width: vw(80),
     },
 
+    w70: {
+        width: '70%',
+    },
+
+    w70vw: {
+        width: vw(70),
+    },
+
     w60: {
         width: '60%',
     },
@@ -595,6 +603,18 @@ const styles = StyleSheet.create({
         paddingHorizontal: vw(2.5),
     },
 
+    paddingV10vw: {
+        paddingVertical: vw(10),
+    },
+
+    paddingV8vw: {
+        paddingVertical: vw(8),
+    },
+
+    paddingV6vw: {
+        paddingVertical: vw(6),
+    },
+
     paddingV4vw: {
         paddingVertical: vw(4),
     },
@@ -622,6 +642,10 @@ const styles = StyleSheet.create({
 
     borderRadius3vw: {
         borderRadius: vw(3),
+    },
+
+    borderRadius4vw: {
+        borderRadius: vw(4),
     },
 
     borderRadius100: {
@@ -894,6 +918,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
+    },
+
+    flexRowStartBaseline: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'baseline',
     },
 
     flexColCenter: {

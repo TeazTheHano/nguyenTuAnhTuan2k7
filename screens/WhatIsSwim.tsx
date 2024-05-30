@@ -165,7 +165,7 @@ export default function WhatIsSwim() {
     return (
         <Gradient2 style={[styles.flex1]}>
             <SafeAreaView style={[styles.flex1,]}>
-                {NavNavigation('Trang chủ')}
+                {NavNavigation('Những điều cần biết')}
                 <ScrollView style={[styles.flex1, styles.paddingH4vw, styles.paddingV4vw, { backgroundColor: colorStyle.fillBlur }]}>
                     <View>
                         {stepScreen(currentScreen, data)}

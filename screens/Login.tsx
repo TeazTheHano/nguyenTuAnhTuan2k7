@@ -6,7 +6,7 @@ import { Nunito14Bold, Nunito14Reg, Nunito16Bold, Nunito16Reg, Nunito18Bold, Nun
 import { useNavigation } from '@react-navigation/native'
 import { femaleIcon, leftArrow, maleIcon, rightArrow } from '../assets/svgXml'
 import { SvgXml } from 'react-native-svg'
-import storage from '../data/storageFunc'
+import storage, { getAllExerciseCourse, loadDefautExerciseCourse } from '../data/storageFunc'
 
 export default function Login() {
   const navigation = useNavigation()
@@ -32,6 +32,12 @@ export default function Login() {
         console.log(err)
         setIsExist(false)
       })
+    getAllExerciseCourse().then(res => {
+      if (res.length == 0) {
+        console.log('no data')
+        loadDefautExerciseCourse()
+      }
+    })
   }, [])
 
   const saveUserInfo = () => {
@@ -49,9 +55,9 @@ export default function Login() {
     }
     saveUserInfo().then(() => {
       navigation.navigate('Tab')
-    }
-    )
+    })
   }
+
 
 
   const formFnc = () => {
