@@ -47,7 +47,9 @@ export const saveExerciseCourse = (
     expires: null,
   });
 
-  console.log(`${exerciseCourse.name} Exercise course ${category}-${index} saved`);
+  console.log(
+    `${exerciseCourse.name} Exercise course ${category}-${index} saved`,
+  );
 };
 
 /**
@@ -60,6 +62,7 @@ export const getExerciseCourse = async (
   category: Number,
   index: Number,
 ): Promise<any> => {
+  console.log(`Getting exercise course ${category}-${index}`);
   return await storage.load({
     key: `exerciseCourse`,
     id: `${category}-${index}`,
@@ -68,10 +71,20 @@ export const getExerciseCourse = async (
 
 export const getAllExerciseCourse = async () => {
   return await storage.getAllDataForKey('exerciseCourse');
-}
+};
 
 export const loadDefautExerciseCourse = () => {
-  exerciseCourse.forEach((course, index) => {
-    saveExerciseCourse(course, course.category, index);
+  exerciseCourse.forEach((category, categoryIndex) => {
+    console.log(`Loading category ${category.category}`);
+    
+    category.data.forEach((course, courseIndex) => {
+      console.log(`Loading course ${course.name}`);
+
+      saveExerciseCourse(course, category.category, courseIndex);
+    });
   });
+};
+
+export const clearExerciseAllData = () => {
+  storage.clearMapForKey('exerciseCourse');
 };

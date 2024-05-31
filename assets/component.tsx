@@ -15,6 +15,7 @@ import colorStyle, { Gradient1, Gradient2, componentStyle } from "./componentSty
 
 // font import 
 import { Nunito14Reg, Nunito16Bold, Nunito18Bold, Signika20Bold } from "./Class";
+import { clearExerciseAllData } from "../data/storageFunc";
 
 // ____________________END OF IMPORT_______________________
 
@@ -54,7 +55,7 @@ export const HomeNameBar = (userName: string) => {
     let date = new Date();
 
     function showInfoBtn() {
-
+        clearExerciseAllData()
     }
 
     return (

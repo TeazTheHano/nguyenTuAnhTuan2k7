@@ -14,7 +14,8 @@ export default function Home() {
 
     const [userName, setUserName] = React.useState<string>('')
     const [age, setAge] = React.useState<number>(0)
-    const [exerciseCourse, setExerciseCourse] = React.useState<any[]>([])
+    const [exerciseCourseCate1, setExerciseCourseCate1] = React.useState<any[]>([])
+    const [exerciseCourseCate2, setExerciseCourseCate2] = React.useState<any[]>([])
     const [loaddingExerciseCourse, setLoaddingExerciseCourse] = React.useState<boolean>(true)
 
     useEffect(() => {
@@ -32,8 +33,14 @@ export default function Home() {
 
     useEffect(() => {
         getAllExerciseCourse().then(res => {
-            setExerciseCourse(res)
+            setExerciseCourseCate1(res.filter(course => course.category === 1))
+            console.log(exerciseCourseCate1);
+            
+            setExerciseCourseCate2(res.filter(course => course.category === 2))
+            console.log(exerciseCourseCate2);
             setLoaddingExerciseCourse(false)
+        }).catch(err => {
+            console.log(err)
         })
     }, [])
 
@@ -78,7 +85,7 @@ export default function Home() {
                         </View>
 
                         {/* warm up list here */}
-                        {exerciseCourse.filter(course => course.category === 1).map((course, index) => {
+                        {exerciseCourseCate1.map((course, index) => {
                             return (
                                 <View key={index} style={[styles.alignSelfCenter, styles.padding3vw, styles.flexRowBetweenCenter, { backgroundColor: colorStyle.fillBlur, width: vw(84), borderRadius: vw(4.5), paddingRight: vw(5) }]}>
                                     <View style={[styles.flexRowStartCenter, styles.gap3vw]}>
@@ -123,7 +130,7 @@ export default function Home() {
                         </View>
 
                         {/* core training list here */}
-                        {exerciseCourse.filter(course => course.category === 2).map((course, index) => {
+                        {exerciseCourseCate2.map((course, index) => {
                             return (
                                 <View key={index} style={[styles.alignSelfCenter, styles.padding3vw, styles.flexRowBetweenCenter, { backgroundColor: colorStyle.fillBlur, width: vw(84), borderRadius: vw(4.5), paddingRight: vw(5) }]}>
                                     <View style={[styles.flexRowStartCenter, styles.gap3vw]}>
@@ -137,7 +144,7 @@ export default function Home() {
                                     </View>
                                     <TouchableOpacity
                                         style={[componentStyle.outerGlowL1T1White, styles.borderRadius100]}
-                                        onPress={() => { navigation.navigate('ExerciseCourse', { cate: 1, index: index }) }}>
+                                        onPress={() => { navigation.navigate('ExerciseCourse', { cate: 2, index: index }) }}>
                                         <Gradient2
                                             style={[styles.padding3vw, styles.borderRadius100]}>
                                             {rightArrow(vw(6), vw(6), 'white')}

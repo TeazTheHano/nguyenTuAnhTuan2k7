@@ -111,7 +111,13 @@ export default function ExerciseCourse({ route, navigation }: any) {
 
                             <View style={[styles.flexRowBetweenCenter, styles.gap8vw, styles.paddingV4vw]}>
                                 <TouchableOpacity
-                                    onPress={() => { navigation.navigate('Home') }}
+                                    onPress={() => {
+                                        navigation.goBack();
+                                        setCountDown(4);
+                                        setCurrentStep(0);
+                                        setEndingCountDown(10);
+                                        isDone ? setIsDone(false) : null;
+                                    }}
                                     style={[componentStyle.outerGlowL1T1White, styles.borderRadius3vw]}>
                                     <Gradient1 style={[styles.paddingV2vw, styles.paddingH10, styles.borderRadius3vw,]}>
                                         <Nunito16Bold style={[styles.textCenter, { color: colorStyle.white }]}>Trở lại trang chủ</Nunito16Bold>
