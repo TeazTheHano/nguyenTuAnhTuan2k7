@@ -13,6 +13,7 @@ import Setting from './screens/Setting';
 
 import WhatIsSwim from './screens/WhatIsSwim';
 import ExerciseCourse from './screens/ExerciseCourse';
+import Quizing from './screens/Quizing';
 // import Add from './screens/Add';
 
 // ____________________END OF IMPORT_______________________
@@ -31,7 +32,7 @@ function App(): React.JSX.Element {
         
         <Stack.Screen name="WhatIsSwim" component={WhatIsSwim} />
         <Stack.Screen name="ExerciseCourse" component={ExerciseCourse} />
-
+        <Stack.Screen name="Quizing" component={Quizing} />
       </Stack.Navigator>
     </NavigationContainer>
   )
