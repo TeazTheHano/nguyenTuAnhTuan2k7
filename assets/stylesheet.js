@@ -479,6 +479,38 @@ const styles = StyleSheet.create({
         marginVertical: vw(1),
     },
 
+    margin1vw: {
+        margin: vw(1),
+    },
+    
+    margin2vw: {
+        margin: vw(2),
+    },
+
+    margin3vw: {
+        margin: vw(3),
+    },
+
+    margin4vw: {
+        margin: vw(4),
+    },
+
+    margin5vw: {
+        margin: vw(5),
+    },
+
+    margin6vw: {
+        margin: vw(6),
+    },
+
+    margin8vw: {
+        margin: vw(8),
+    },
+
+    margin10vw: {
+        margin: vw(10),
+    },
+
     padding8vw: {
         padding: vw(8),
     },

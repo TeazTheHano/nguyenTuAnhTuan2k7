@@ -76,7 +76,7 @@ export const getAllExerciseCourse = async () => {
 export const loadDefautExerciseCourse = () => {
   exerciseCourse.forEach((category, categoryIndex) => {
     console.log(`Loading category ${category.category}`);
-    
+
     category.data.forEach((course, courseIndex) => {
       console.log(`Loading course ${course.name}`);
 
@@ -88,3 +88,47 @@ export const loadDefautExerciseCourse = () => {
 export const clearExerciseAllData = () => {
   storage.clearMapForKey('exerciseCourse');
 };
+
+export const saveQuiz = (quiz: any, category: Number, level: Number) => {
+  storage.save({
+    key: `quiz`,
+    data: quiz,
+    id: `${category}-${level}`,
+    expires: null,
+  });
+
+  console.log(`Quiz ${category}-${level} saved`);
+};
+
+export const getQuiz = async (
+  category: Number,
+  level: Number,
+): Promise<any> => {
+  console.log(`Getting quiz ${level}`);
+  return await storage.load({
+    key: `quiz`,
+    id: `${category}-${level}`,
+  });
+};
+
+export const getAllQuiz = async () => {
+  return await storage.getAllDataForKey('quiz');
+};
+
+export const loadDefaultQuiz = () => {
+  quiz.forEach((item, index) => {
+    saveQuiz(item, item.category, item.level);
+  });
+};
+
+export const clearQuizAllData = () => {
+  storage.clearMapForKey('quiz');
+};
+
+export const clearAllData = () => {
+  storage.clearMapForKey('exerciseCourse');
+  storage.clearMapForKey('quiz');
+  storage.remove({
+    key: 'userInfo',
+  });
+}

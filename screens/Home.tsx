@@ -1,9 +1,9 @@
-import { View, Text, Touchable, TouchableOpacity, SafeAreaView, ScrollView, ActivityIndicator } from 'react-native'
+import { View, Text, Touchable, TouchableOpacity, SafeAreaView, ScrollView, ActivityIndicator, } from 'react-native'
 import React, { useEffect } from 'react'
 import storage, { getAllExerciseCourse } from '../data/storageFunc'
 import colorStyle, { componentStyle, Gradient1, Gradient2 } from '../assets/componentStyleSheet'
 import styles, { vw } from '../assets/stylesheet'
-import { HomeNameBar, marginBottomForScrollView } from '../assets/component'
+import { HomeNameBar, marginBottomForScrollView, statusBarTransparency } from '../assets/component'
 import { coreTraining, homeBoardingPeople, infoIcon, rightArrow, swim1, swim2 } from '../assets/svgXml'
 import { Nunito12Reg, Nunito16Bold, Nunito18Bold, Signika20Bold, Signika24Bold } from '../assets/Class'
 import { useNavigation } from '@react-navigation/native'
@@ -34,10 +34,7 @@ export default function Home() {
     useEffect(() => {
         getAllExerciseCourse().then(res => {
             setExerciseCourseCate1(res.filter(course => course.category === 1))
-            console.log(exerciseCourseCate1);
-            
             setExerciseCourseCate2(res.filter(course => course.category === 2))
-            console.log(exerciseCourseCate2);
             setLoaddingExerciseCourse(false)
         }).catch(err => {
             console.log(err)
@@ -46,7 +43,8 @@ export default function Home() {
 
     return (
         <Gradient2 style={styles.flex1}>
-            <SafeAreaView>
+            {statusBarTransparency()}
+            <SafeAreaView style={[styles.flex1]}>
                 {HomeNameBar(userName)}
                 <ScrollView style={[]}>
                     <View style={[styles.flexCol, styles.gap4vw]}>

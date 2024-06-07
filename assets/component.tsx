@@ -1,6 +1,6 @@
 // system imports
 import React, { Component, ComponentType, ReactElement, ReactNode, useEffect, useRef, useState } from "react";
-import { Text, View, TextInput, TouchableOpacity, Image, FlatList, ImageBackground, Alert, Share } from "react-native";
+import { Text, View, TextInput, TouchableOpacity, Image, FlatList, ImageBackground, Alert, Share, StatusBar } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { Dimensions } from "react-native";
 
@@ -25,6 +25,19 @@ let { width, height } = Dimensions.get('window');
 export const marginBottomForScrollView = (time?: number) => {
     return (
         <View style={{ height: vh(time ? 5 * time : 5), opacity: 0 }}></View>
+    )
+}
+
+export const statusBarTransparency = (lightContent: boolean = true) => {
+    let statusBarHeight = StatusBar.currentHeight ? StatusBar.currentHeight : 0
+    return (
+        <View>
+            <StatusBar barStyle={lightContent ? 'light-content' : 'dark-content'}
+            backgroundColor='rgba(0,0,0,0)'
+            translucent={true}
+            />
+            <View style={{ width: vw(100), height: statusBarHeight }}></View>
+        </View>
     )
 }
 

@@ -2,7 +2,7 @@ import { View, Text, SafeAreaView, ScrollView, TouchableOpacity } from 'react-na
 import React, { ReactElement } from 'react'
 import colorStyle, { componentStyle, Gradient1, Gradient2 } from '../assets/componentStyleSheet'
 import styles, { vw } from '../assets/stylesheet'
-import { marginBottomForScrollView, NavNavigation, UlList } from '../assets/component'
+import { marginBottomForScrollView, NavNavigation, statusBarTransparency, UlList } from '../assets/component'
 import { Nunito16Bold, Nunito18Bold, Signika20Bold, Signika24Bold } from '../assets/Class'
 import { homeBoardingPeople, swim1, WhatIsSwim1, WhatIsSwim2, WhatIsSwim3, WhatIsSwim4, WhatIsSwim5, WhatIsSwim6, WhatIsSwim7, WhatIsSwim9 } from '../assets/svgXml'
 import { Svg, SvgXml } from 'react-native-svg'
@@ -154,7 +154,9 @@ export default function WhatIsSwim() {
                         {data[currentScreen].subTittle ? <Nunito18Bold style={{ color: colorStyle.white }}>{data[currentScreen].subTittle}</Nunito18Bold> : null}
                         {UlList(data[currentScreen].content, Nunito18Bold, Nunito18Bold, data[currentScreen].bullet, data[currentScreen].subBullet, vw(2))}
                         <View style={[styles.flexRowBetweenCenter, styles.gap2vw]}>
-                            {data[currentScreen].imgAddress ? <View>{data[currentScreen].imgAddress}</View> : null}
+                            {data[currentScreen].imgAddress ? data[currentScreen].imgAddress.map((item, index)=>{return(
+                                <View key={index}>{item}</View>
+                            )}) : null}
                         </View>
                     </Gradient2>
                 </View>
@@ -164,6 +166,7 @@ export default function WhatIsSwim() {
 
     return (
         <Gradient2 style={[styles.flex1]}>
+            {statusBarTransparency()}
             <SafeAreaView style={[styles.flex1,]}>
                 {NavNavigation('Những điều cần biết')}
                 <ScrollView style={[styles.flex1, styles.paddingH4vw, styles.paddingV4vw, { backgroundColor: colorStyle.fillBlur }]}>

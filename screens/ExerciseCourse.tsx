@@ -2,7 +2,7 @@ import { View, Text, ActivityIndicator, ScrollView, TouchableOpacity, Animated, 
 import React, { useEffect, useRef } from 'react'
 import colorStyle, { componentStyle, Gradient1, Gradient2 } from '../assets/componentStyleSheet'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { marginBottomForScrollView, NavNavigation } from '../assets/component'
+import { marginBottomForScrollView, NavNavigation, statusBarTransparency } from '../assets/component'
 import styles, { vh, vw } from '../assets/stylesheet'
 import { getExerciseCourse } from '../data/storageFunc'
 import { Nunito12Reg, Nunito14Bold, Nunito16Bold, Nunito18Bold, Nunito20Bold, Signika20Bold } from '../assets/Class'
@@ -91,6 +91,7 @@ export default function ExerciseCourse({ route, navigation }: any) {
 
     return (
         <Gradient2 style={[styles.flex1]}>
+            {statusBarTransparency()}
             <SafeAreaView style={[styles.flex1,]}>
                 {NavNavigation('Trang chủ')}
 

@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { vw, vh, vmax, vmin } from './stylesheet';
 import { Component, ReactNode } from 'react';
 import LinearGradient from 'react-native-linear-gradient';
@@ -28,14 +28,23 @@ export const componentStyle = StyleSheet.create<any>({
     },
 
     outerGlowL1T1White: {
-        backgroundColor: 'white',
         shadowOffset: { width: -1, height: -1 },
         shadowOpacity: 0.5,
         shadowRadius: 4,
         shadowColor: '#ccc',
+        elevation: 1,
+        // padding: vw(2),
+        // Add platform-specific styles for Android
+        ...Platform.select({
+            android: {
+                elevation: 10,
+                shadowOffset: { width: 1, height: -1 },
+                shadowOpacity: 1,
+                shadowRadius: 10,
+
+            },
+        }),
     },
-
-
 });
 
 export class Gradient1 extends Component<{ children: ReactNode, style?: any }> {

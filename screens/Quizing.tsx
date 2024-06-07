@@ -1,32 +1,37 @@
-import { View, Text, ActivityIndicator, ScrollView, TouchableOpacity, Animated, Easing } from 'react-native'
+import { View, Text, ActivityIndicator, ScrollView, TouchableOpacity, Animated, Easing, FlatList } from 'react-native'
 import React, { useEffect, useRef } from 'react'
 import colorStyle, { componentStyle, Gradient1, Gradient2 } from '../assets/componentStyleSheet'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { marginBottomForScrollView, NavNavigation } from '../assets/component'
+import { marginBottomForScrollView, NavNavigation, statusBarTransparency, UlList } from '../assets/component'
 import styles, { vh, vw } from '../assets/stylesheet'
-import { getExerciseCourse } from '../data/storageFunc'
+import storage, { getQuiz } from '../data/storageFunc'
 import { Nunito12Reg, Nunito14Bold, Nunito16Bold, Nunito18Bold, Nunito20Bold, Signika20Bold } from '../assets/Class'
 import { SvgXml } from 'react-native-svg'
-import { countDown0, countDown1, countDown2, countDown3, endGameIcon, infoIcon, leftArrow, quizLogoIcon, quizPeopleIcon, rightArrow } from '../assets/svgXml'
+import { countDown0, countDown1, countDown2, countDown3, endGameIcon, infoIcon, leftArrow, quizLogoIcon, quizPeopleIcon, rightArrow, scoreBoard } from '../assets/svgXml'
 
 export default function Quizing({ route, navigation }: any) {
-    const { cate, index } = route.params;
+    const { cate, level } = route.params;
 
-    const [excerise, setExcerise] = React.useState<any>({});
-    const [loadingExcerise, setLoadingExcerise] = React.useState<boolean>(true);
+    const [quiz, setQuiz] = React.useState<any>({});
+    const [loadingQuiz, setLoadingQuiz] = React.useState<boolean>(true);
     const [countDown, setCountDown] = React.useState<number>(4);
     const [currentStep, setCurrentStep] = React.useState<number>(0);
     const [endingCountDown, setEndingCountDown] = React.useState<number>(10);
     const [isDone, setIsDone] = React.useState<boolean>(false);
+    const [currentScore, setCurrentScore] = React.useState<number>(0);
 
     useEffect(() => {
-        getExerciseCourse(cate, index).then((res) => {
-            setExcerise(res);
-            setLoadingExcerise(false);
-        }).catch((err) => {
-            console.log(err);
+        const unsubscribe = navigation.addListener('focus', () => {
+            getQuiz(cate, level).then((res) => {
+                setQuiz(res);
+                setLoadingQuiz(false);
+            }).catch((err) => {
+                console.log(err);
+            });
         });
-    }, []);
+
+        return unsubscribe;
+    }, [navigation]);
 
     const countDownTimer = () => {
         if (countDown > 0) {
@@ -93,83 +98,80 @@ export default function Quizing({ route, navigation }: any) {
         <Gradient2 style={[styles.flex1]}>
             <SafeAreaView style={[styles.flex1,]}>
                 {NavNavigation('Trang chủ')}
+                {/* {statusBarTransparency()} */}
 
-                {loadingExcerise ? <ActivityIndicator /> :
+                {loadingQuiz ? <ActivityIndicator /> :
                     isDone ?
-                        <View style={[styles.flexColCenter, styles.gap6vw, styles.flex1]}>
-                            <View style={[styles.flexColCenter]}>
-                                <Animated.View style={[{ transform: [{ scale: endGameAnimation }] }]}>
-                                    {endGameIcon(vw(50), vw(50))}
-                                </Animated.View>
-                                <View style={[styles.w40vw, styles.h10vw, { backgroundColor: `#FFDB09` }]}></View>
-                            </View>
 
-                            <View style={[styles.flexColCenter, styles.w80vw, styles.padding5vw, styles.paddingH10, styles.borderRadius4vw, { backgroundColor: colorStyle.fillBlur }]}>
-                                <Nunito18Bold style={{ color: colorStyle.white }}>Bạn đã hoàn thành</Nunito18Bold>
-                                <Signika20Bold style={{ color: colorStyle.main3 }}>{excerise.name}</Signika20Bold>
-                            </View>
-
-                            <View style={[styles.flexRowBetweenCenter, styles.gap8vw, styles.paddingV4vw]}>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        navigation.goBack();
-                                        setCountDown(4);
-                                        setCurrentStep(0);
-                                        setEndingCountDown(10);
-                                        isDone ? setIsDone(false) : null;
-                                    }}
-                                    style={[componentStyle.outerGlowL1T1White, styles.borderRadius3vw]}>
-                                    <Gradient1 style={[styles.paddingV2vw, styles.paddingH10, styles.borderRadius3vw,]}>
-                                        <Nunito16Bold style={[styles.textCenter, { color: colorStyle.white }]}>Trở lại trang chủ</Nunito16Bold>
-                                    </Gradient1>
-
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={[componentStyle.outerGlowL1T1White, styles.borderRadius3vw]}>
-                                    <Gradient1 style={[styles.paddingV2vw, styles.paddingH10, styles.borderRadius3vw, styles.flexRowCenter, styles.gap3vw]}>
-                                        <Nunito16Bold style={[styles.textCenter, { color: colorStyle.white }]}>
-                                            Tới bài tiếp theo
-                                        </Nunito16Bold>
-                                        {rightArrow(vw(6), vw(6), colorStyle.white)}
-                                    </Gradient1>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                        :
-                        <View style={[styles.flex1, styles.flexColBetweenCenter, styles.gap6vw,]}>
+                        // END GAME
+                        <View style={[styles.flexColStartCenter, styles.gap6vw, styles.flex1]}>
                             <View style={[componentStyle.outerGlowL1T1White, styles.borderRadius16, styles.marginTop4vw, styles.w90, styles.alignSelfCenter]}>
                                 <Gradient2 style={[styles.flexRowBetweenCenter, styles.gap3vw, styles.borderRadius16, styles.padding4vw,]}>
                                     {quizLogoIcon(vw(40), vw(20))}
                                     {quizPeopleIcon(vw(20), vw(20))}
                                 </Gradient2>
                             </View>
-
                             <View style={[styles.alignSelfCenter, styles.w90vw, styles.padding10, { borderBottomColor: colorStyle.grey, borderBottomWidth: 1 }]}>
-                                <Nunito16Bold style={{ color: colorStyle.main3 }}>Khởi động <Nunito14Bold style={{ color: colorStyle.white }}>| {excerise.name}</Nunito14Bold></Nunito16Bold>
+                                <Nunito16Bold style={{ color: colorStyle.main3 }}>{quiz.category == 1 ? 'Nhập môn' : quiz.category == 2 ? 'Nghiệp dư' : 'Kình ngư'} <Nunito14Bold style={{ color: colorStyle.white }}>| Level {quiz.level} |</Nunito14Bold> {currentScore} điểm</Nunito16Bold>
                             </View>
+                            {scoreBoard(vw(80), vw(40))}
+                            {/* score here */}
+                            <View style={[styles.flexRowBetweenCenter, styles.w90]}>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        navigation.goBack()
+                                    }}
+                                    style={[styles.border1, styles.w45, styles.marginTop2vw, styles.padding2vw, styles.borderRadius4vw, { borderColor: colorStyle.main3, marginBottom: vw(20) }]}>
+                                    <Nunito16Bold style={[styles.textCenter, { color: colorStyle.white }]}>Trở lại</Nunito16Bold>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        // setCurrentStep(currentStep + 1);
+                                    }}
+                                    style={[styles.border1, styles.w45, styles.marginTop2vw, styles.padding2vw, styles.borderRadius4vw, { borderColor: colorStyle.main3, marginBottom: vw(20) }]}>
+                                    <Nunito16Bold style={[styles.textCenter, { color: colorStyle.white }]}>Màn tiếp theo</Nunito16Bold>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                        // end of END GAME
+                        :
+                        <View style={[styles.flex1, styles.flexColBetweenCenter, styles.gap6vw,]}>
 
-                            {countDown ?
-                                <View>
-                                    <View style={[styles.alignSelfCenter, styles.w90vw, styles.padding10, styles.marginBottom4vw, { borderBottomColor: colorStyle.grey, borderBottomWidth: 1 }]}>
-                                        <Nunito16Bold style={{ color: colorStyle.main3 }}>Bắt đầu bài khởi động trong...</Nunito16Bold>
-                                    </View>
+                            {/* BANNER */}
+                            <View style={[componentStyle.outerGlowL1T1White, styles.borderRadius16, styles.marginTop4vw, styles.w90, styles.alignSelfCenter]}>
+                                <Gradient2 style={[styles.flexRowBetweenCenter, styles.gap3vw, styles.borderRadius16, styles.padding4vw,]}>
+                                    {quizLogoIcon(vw(40), vw(20))}
+                                    {quizPeopleIcon(vw(20), vw(20))}
+                                </Gradient2>
+                            </View>
+                            {/* end of BANNER */}
 
-                                    {countDown == 4 ? countDown3(vw(100), vh(30)) : countDown == 3 ? countDown2(vw(100), vh(30)) : countDown == 2 ? countDown1(vw(100), vh(30)) : countDown0(vw(100), vh(30))}
+                            {/* QUIZ INFO */}
+                            <View style={[styles.alignSelfCenter, styles.w90vw, styles.padding10, { borderBottomColor: colorStyle.grey, borderBottomWidth: 1 }]}>
+                                <Nunito16Bold style={{ color: colorStyle.main3 }}>{quiz.category == 1 ? 'Nhập môn' : quiz.category == 2 ? 'Nghiệp dư' : 'Kình ngư'} <Nunito14Bold style={{ color: colorStyle.white }}>| Level {quiz.level} |</Nunito14Bold> {currentScore} điểm</Nunito16Bold>
+                            </View>
+                            {/* end of QUIZ INFO */}
 
-                                </View>
-                                :
-                                <View style={[styles.w100vw]}>
-                                    <SvgXml xml={currentStep == excerise.step.length ? excerise.image : excerise.step[currentStep].image} width={vw(100)} height={vh(30)} />
-                                </View>}
 
                             <ScrollView
-                                style={[styles.w100, styles.paddingV3vw,]}
+                                style={[styles.w100, styles.paddingV3vw, styles.flex1,]}
                                 contentContainerStyle={[styles.flexColBetweenCenter, styles.gap6vw,]}>
                                 {countDown ?
-                                    null :
-                                    currentStep == excerise.step.length ?
+                                    // QUIZ START COUNT DOWN
+                                    <View>
+                                        <View style={[styles.alignSelfCenter, styles.w90vw, styles.padding10, styles.marginBottom4vw, { borderBottomColor: colorStyle.grey, borderBottomWidth: 1 }]}>
+                                            <Nunito16Bold style={{ color: colorStyle.main3 }}>Bắt đầu bài Quiz trong...</Nunito16Bold>
+                                        </View>
+                                        {countDown == 4 ? countDown3(vw(100), vh(30)) : countDown == 3 ? countDown2(vw(100), vh(30)) : countDown == 2 ? countDown1(vw(100), vh(30)) : countDown0(vw(100), vh(30))}
+                                    </View>
+                                    // end of QUIZ START COUNT DOWN
+
+                                    :
+                                    currentStep == quiz.data.length ?
+
+                                        // END QUIZ COUNT DOWN
                                         <View style={[styles.flexColCenter, styles.gap4vw]}>
-                                            <Nunito16Bold style={{ color: colorStyle.main3 }}>Kết thúc bài khởi động trong...</Nunito16Bold>
+                                            <Nunito16Bold style={{ color: colorStyle.main3 }}>Kết thúc bài Quiz trong...</Nunito16Bold>
                                             <View style={[styles.flexRowCenter, styles.paddingH4vw, styles.gap4vw]}>
                                                 <Gradient1 style={[styles.borderRadius100,]}>
                                                     <View style={[styles.borderRadius100, styles.flexRowCenter, styles.borderRadius100, { backgroundColor: `#151B39`, width: vw(12), height: vw(12), margin: vw(0.75) }]}>
@@ -181,37 +183,100 @@ export default function Quizing({ route, navigation }: any) {
                                                 </View>
                                             </View>
                                         </View>
+                                        // end of END QUIZ COUNT DOWN
+
                                         :
-                                        <View style={[styles.alignSelfCenter, styles.w90, componentStyle.outerGlowL1T1White, { borderRadius: vw(4) }]}>
-                                            <Gradient2 style={[styles.flexRowCenter, styles.paddingH4vw, { borderRadius: vw(4) }]}>
-                                                <TouchableOpacity
-                                                    disabled={currentStep === 0}
-                                                    style={[styles.paddingV8vw]}
-                                                    onPress={() => { setCurrentStep(currentStep - 1) }}>
-                                                    <View style={[styles.padding3vw, styles.borderRadius3vw, { backgroundColor: colorStyle.fillBlur, opacity: currentStep === 0 ? 0.2 : 1 }]}>
-                                                        {leftArrow(vw(6), vw(6), colorStyle.white)}
+                                        <View style={[styles.flexColCenter, styles.gap2vw, { borderRadius: vw(4) }]}>
+
+                                            {/* QUIZ PROCESS BAR */}
+                                            <View style={[styles.flexRowBetweenCenter, styles.gap2vw, styles.marginHorizontal8vw]}>
+                                                <Signika20Bold style={{ color: colorStyle.main3 }}>{currentStep + 1}/{quiz.data.length}</Signika20Bold>
+                                                <View style={[styles.flexRow, styles.flex1]}>
+                                                    {quiz.data.map((item: any, index: number) => {
+                                                        return (
+                                                            <View key={index} style={[styles.borderRadius100, styles.flex1, { backgroundColor: index <= currentStep ? colorStyle.main3 : colorStyle.fillBlur, height: vw(3), margin: vw(0.75) }]}></View>
+                                                        )
+                                                    })}
+                                                </View>
+                                            </View>
+                                            {/* end of QUIZ PROCESS BAR */}
+
+                                            {/* COUNT DOWN BAR */}
+                                            <View style={[styles.flexRowCenter, styles.paddingH4vw, styles.gap4vw,]}>
+                                                <Gradient1 style={[styles.borderRadius100,]}>
+                                                    <View style={[styles.borderRadius100, styles.flexRowCenter, styles.borderRadius100, { backgroundColor: `#151B39`, width: vw(12), height: vw(12), margin: vw(0.75) }]}>
+                                                        <Nunito20Bold style={[styles.textCenter, { color: colorStyle.white }]}>{endingCountDown}</Nunito20Bold>
                                                     </View>
-                                                </TouchableOpacity>
-                                                <Nunito16Bold style={[styles.padding3vw, styles.flex1, styles.textCenter, { color: colorStyle.white }]}>{excerise.step[currentStep].description}</Nunito16Bold>
-                                                <TouchableOpacity
-                                                    // disabled={currentStep === excerise.step.length - 1}
-                                                    style={[styles.paddingV8vw]}
-                                                    onPress={() => { setCurrentStep(currentStep + 1); currentStep === excerise.step.length - 1 ? countDownShorten() : null }}>
-                                                    <View style={[styles.padding3vw, styles.borderRadius3vw, { backgroundColor: colorStyle.fillBlur, }]}>
-                                                        {rightArrow(vw(6), vw(6), colorStyle.white)}
-                                                    </View>
-                                                </TouchableOpacity>
-                                            </Gradient2>
+                                                </Gradient1>
+                                                <View style={[styles.w70vw, styles.borderRadius100, { backgroundColor: colorStyle.fillBlur, height: vw(1.5), }]}>
+                                                    <Animated.View style={[styles.borderRadius100, { backgroundColor: colorStyle.main3, height: vw(1.5), width: countDownShortenAnimation }]}></Animated.View>
+                                                </View>
+                                            </View>
+                                            {/* end of COUNT DOWN BAR */}
+
+                                            {/* QUIZ QUESTION */}
+                                            <View style={[componentStyle.outerGlowL1T1White]}>
+                                                <View style={[styles.marginTop2vw, { width: vw(94) }]}>
+                                                    <Gradient1 style={[styles.padding4vw, styles.borderRadius3vw]}>
+                                                        <Nunito16Bold style={{ color: colorStyle.white }}>{quiz.data[currentStep].question}</Nunito16Bold>
+                                                    </Gradient1>
+                                                </View>
+                                            </View>
+                                            {/* end of QUIZ QUESTION */}
+
+                                            {/* QUIZ ANSWERS */}
+                                            <FlatList
+                                                data={quiz.data[currentStep].options}
+                                                numColumns={2}
+                                                scrollEnabled={false}
+                                                keyExtractor={(item, index) => index.toString()}
+                                                renderItem={({ item, index }) => (
+                                                    <TouchableOpacity
+                                                        onPress={() => {
+                                                            if (currentStep < quiz.data.length - 1) {
+                                                                setCurrentStep(currentStep + 1);
+                                                            } else {
+                                                                setIsDone(true);
+                                                            }
+
+                                                            if (index == quiz.data[currentStep].answer) {
+                                                                console.log('correct')
+                                                                setCurrentScore(currentScore + 1);
+                                                                quiz.score = currentScore + 1;
+                                                            } else {
+                                                                console.log('incorrect')
+                                                            }
+                                                            quiz.data[currentStep].isDone = true;
+                                                            quiz.data[currentStep].lastAnswer = index;
+
+                                                            storage.save({
+                                                                key: `quiz`,
+                                                                data: quiz,
+                                                                id: `${cate}-${level}`,
+                                                                expires: null,
+                                                            });
+                                                        }}
+                                                        key={index}
+                                                    >
+                                                        <View style={[styles.borderRadius3vw, styles.paddingH4vw, styles.paddingV2vw, styles.margin2vw, { backgroundColor: colorStyle.fillBlur, width: vw(40) }]}>
+                                                            <Nunito16Bold style={[styles.textCenter, { color: colorStyle.white }]}>{String.fromCharCode(65 + index)}: {item}</Nunito16Bold>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                )}
+                                            />
+                                            {/* end of QUIZ ANSWERS */}
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    setCurrentStep(currentStep + 1);
+                                                }}
+                                                style={[styles.border1, styles.w80vw, styles.marginTop2vw, styles.padding2vw, styles.borderRadius4vw, { borderColor: colorStyle.main3, marginBottom: vw(20) }]}>
+                                                <Nunito16Bold style={[styles.textCenter, { color: colorStyle.white }]}>Bỏ qua</Nunito16Bold>
+                                            </TouchableOpacity>
                                         </View>
                                 }
-
-                                <View style={[styles.flexRowBetweenCenter, styles.gap3vw, styles.w80, styles.paddingV4vw, styles.paddingH5vw, styles.borderRadius4vw, { backgroundColor: colorStyle.fillBlur }]}>
-                                    {infoIcon(vw(6), vw(6))}
-                                    <Nunito12Reg style={[styles.flex1, styles.textJustify, { color: colorStyle.white }]}>{excerise.description}</Nunito12Reg>
-                                </View>
+                                {/* {marginBottomForScrollView()} */}
                             </ScrollView>
 
-                            {marginBottomForScrollView(0.5)}
                         </View>
                 }
             </SafeAreaView >

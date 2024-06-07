@@ -6,7 +6,8 @@ import { Nunito14Bold, Nunito14Reg, Nunito16Bold, Nunito16Reg, Nunito18Bold, Nun
 import { useNavigation } from '@react-navigation/native'
 import { femaleIcon, leftArrow, maleIcon, rightArrow } from '../assets/svgXml'
 import { SvgXml } from 'react-native-svg'
-import storage, { getAllExerciseCourse, loadDefautExerciseCourse } from '../data/storageFunc'
+import storage, { getAllExerciseCourse, getAllQuiz, loadDefaultQuiz, loadDefautExerciseCourse } from '../data/storageFunc'
+import { statusBarTransparency } from '../assets/component'
 
 export default function Login() {
   const navigation = useNavigation()
@@ -16,8 +17,8 @@ export default function Login() {
   const [name, setName] = useState<string>('')
   const [sex, setSex] = useState<0 | 1 | 2>(0)
   const [age, setAge] = useState<number>(2)
-  const [height, setHeight] = useState<number>(150)
-  const [weight, setWeight] = useState<number>(40)
+  const [height, setHeight] = useState<number>(0)
+  const [weight, setWeight] = useState<number>(0)
   const [currentStep, setCurrentStep] = useState<number>(0)
 
   useEffect(() => {
@@ -36,6 +37,12 @@ export default function Login() {
       if (res.length == 0) {
         console.log('no data')
         loadDefautExerciseCourse()
+      }
+    })
+    getAllQuiz().then(res => {
+      if (res.length == 0) {
+        console.log('no data')
+        loadDefaultQuiz()
       }
     })
   }, [])
@@ -78,14 +85,14 @@ export default function Login() {
                 snapToInterval={ITEM_WIDTH}
                 showsHorizontalScrollIndicator={false}
                 data={data}
-                getItemLayout={(data, index) => (
-                  { length: ITEM_WIDTH, offset: ITEM_WIDTH * index, index }
-                )}
-                ref={(ref) => {
-                  if (ref) {
-                    ref.scrollToIndex({ index: useStateTarget - 2, animated: false });
-                  }
-                }}
+                // getItemLayout={(data, index) => (
+                //   { length: ITEM_WIDTH, offset: ITEM_WIDTH * index, index }
+                // )}
+                // ref={(ref) => {
+                //   if (ref) {
+                //     ref.scrollToIndex({ index: useStateTarget - 2, animated: false });
+                //   }
+                // }}
                 keyExtractor={(item) => item.toString()}
                 onScroll={({ nativeEvent }) => {
                   const index = Math.round(nativeEvent.contentOffset.x / ITEM_WIDTH);
@@ -95,11 +102,11 @@ export default function Login() {
                 renderItem={({ item }) => (
                   <View style={[styles.alignSelfCenter,]}>
                     {useStateTarget == item ?
-                      <View style={[styles.flexColCenter, styles.boxsizingBorderBox, styles.h30vw, componentStyle.outerGlowL1T1White, { width: ITEM_WIDTH }]}>
+                      <View style={[styles.flexColCenter, styles.boxsizingBorderBox, styles.textCenter, styles.h30vw, componentStyle.outerGlowL1T1White, { width: ITEM_WIDTH }]}>
                         <Signika20Bold style={{ color: 'white', fontSize: vw(10) }}>{item}</Signika20Bold>
                       </View>
                       :
-                      <View style={[styles.flexColCenter, styles.boxsizingBorderBox, styles.h30vw, { width: ITEM_WIDTH, opacity: Math.abs(useStateTarget - item) == 1 ? 0.7 : Math.abs(useStateTarget - item) == 2 ? 0.2 : 0.1 }]}>
+                      <View style={[styles.flexColCenter, styles.boxsizingBorderBox, styles.textCenter, styles.h30vw, { width: ITEM_WIDTH, opacity: Math.abs(useStateTarget - item) == 1 ? 0.7 : Math.abs(useStateTarget - item) == 2 ? 0.2 : 0.1 }]}>
                         <Signika20Bold style={{ color: colorStyle.white, fontSize: vw(10) }}>{item}</Signika20Bold>
                       </View>
                     }
@@ -200,6 +207,7 @@ export default function Login() {
 
   return (
     <Gradient2 style={[styles.flex1]}>
+      {statusBarTransparency()}
       <SafeAreaView style={[styles.flex1]}>
         {
           isExist == null ?

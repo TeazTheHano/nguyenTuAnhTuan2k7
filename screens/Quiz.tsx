@@ -1,11 +1,11 @@
 import { View, Text, Touchable, TouchableOpacity, SafeAreaView, ScrollView, ActivityIndicator } from 'react-native'
 import React, { useEffect } from 'react'
-import storage, { getAllExerciseCourse } from '../data/storageFunc'
+import storage, { getAllQuiz } from '../data/storageFunc'
 import colorStyle, { componentStyle, Gradient1, Gradient2 } from '../assets/componentStyleSheet'
 import styles, { vw } from '../assets/stylesheet'
-import { HomeNameBar, marginBottomForScrollView } from '../assets/component'
+import { HomeNameBar, marginBottomForScrollView, statusBarTransparency } from '../assets/component'
 import { bronzeMedal, coreTraining, goldMedal, homeBoardingPeople, infoIcon, quizLogoIcon, quizPeopleIcon, rightArrow, rightArrowFill, silverMedal, swim1, swim2 } from '../assets/svgXml'
-import { Nunito12Reg, Nunito14Bold, Nunito16Bold, Nunito18Bold, Signika20Bold, Signika24Bold } from '../assets/Class'
+import { Nunito12Bold, Nunito12Reg, Nunito14Bold, Nunito16Bold, Nunito18Bold, Signika20Bold, Signika24Bold } from '../assets/Class'
 import { useNavigation } from '@react-navigation/native'
 import { SvgXml } from 'react-native-svg'
 
@@ -14,9 +14,10 @@ export default function Quiz() {
 
   const [userName, setUserName] = React.useState<string>('')
   const [age, setAge] = React.useState<number>(0)
-  const [exerciseCourseCate1, setExerciseCourseCate1] = React.useState<any[]>([])
-  const [exerciseCourseCate2, setExerciseCourseCate2] = React.useState<any[]>([])
-  const [loaddingExerciseCourse, setLoaddingExerciseCourse] = React.useState<boolean>(true)
+  const [quiz1, setQuiz1] = React.useState<any[]>([])
+  const [quiz2, seQuiz2] = React.useState<any[]>([])
+  const [quiz3, setQuiz3] = React.useState<any[]>([])
+  const [loaddingExercisequiz, setLoaddingExerciseQuiz] = React.useState<boolean>(true)
 
   useEffect(() => {
     storage.load({
@@ -32,20 +33,23 @@ export default function Quiz() {
   }, [])
 
   useEffect(() => {
-    getAllExerciseCourse().then(res => {
-      setExerciseCourseCate1(res.filter(course => course.category === 1))
-      console.log(exerciseCourseCate1);
+    const unsubscribe = navigation.addListener('focus', () => {
+      getAllQuiz().then(res => {
+        setQuiz1(res.filter(quiz => quiz.category === 1))
+        seQuiz2(res.filter(quiz => quiz.category === 2))
+        setQuiz3(res.filter(quiz => quiz.category === 3))
+        setLoaddingExerciseQuiz(false)
+      }).catch(err => {
+        console.log(err)
+      })
+    });
 
-      setExerciseCourseCate2(res.filter(course => course.category === 2))
-      console.log(exerciseCourseCate2);
-      setLoaddingExerciseCourse(false)
-    }).catch(err => {
-      console.log(err)
-    })
-  }, [])
+    return unsubscribe;
+  }, [navigation])
 
   return (
     <Gradient2 style={styles.flex1}>
+      {statusBarTransparency()}
       <SafeAreaView>
         {HomeNameBar(userName)}
         <ScrollView style={[]}>
@@ -68,19 +72,21 @@ export default function Quiz() {
               </View>
             </View>
 
-            {exerciseCourseCate1.map((course, index) => {
+            {quiz1.map((quiz, index) => {
               return (
-                <View key={index} style={[styles.alignSelfCenter, styles.padding3vw, styles.flexRowBetweenCenter, { backgroundColor: colorStyle.fillBlur, width: vw(84), borderRadius: vw(4.5), paddingRight: vw(5) }]}>
+                <View key={index} style={[styles.alignSelfCenter, styles.padding4vw, styles.flexRowBetweenCenter, { backgroundColor: colorStyle.fillBlur, width: vw(84), borderRadius: vw(4.5) }]}>
                   <View style={[styles.flexRowStartCenter, styles.gap3vw]}>
 
                     <View style={[]}>
-                      <Nunito16Bold style={[styles.flex1, { color: colorStyle.main3, lineHeight: vw(8) }]}>{course.name}</Nunito16Bold>
-                      <Nunito12Reg style={[styles.flex1, { color: colorStyle.white }]}>{course.step.length} bước | {course.time} phút</Nunito12Reg>
+                      <Nunito16Bold style={[styles.flex1, { color: colorStyle.main3, lineHeight: vw(8) }]}>Level {quiz.level}</Nunito16Bold>
+                      <Nunito12Reg style={[{color:colorStyle.white}]}>Hoàn thành <Nunito12Bold style={{color:colorStyle.main3}}>{
+                        quiz.data.filter((question: any) => question.isDone).length
+                      }/{quiz.data.length}</Nunito12Bold> câu hỏi - {quiz.score} điểm</Nunito12Reg>
                     </View>
                   </View>
                   <TouchableOpacity
                     style={[componentStyle.outerGlowL1T1White, { borderRadius: vw(2) }]}
-                    onPress={() => { navigation.navigate('Quizing', { cate: 1, index: index }) }}>
+                    onPress={() => { navigation.navigate('Quizing', { cate: 1, level: quiz.level }) }}>
                     <Gradient2
                       style={[styles.flexRowCenter, styles.gap2vw, styles.paddingH2vw, styles.paddingV1vw, { borderRadius: vw(2) }]}>
                       <Nunito14Bold style={{ color: colorStyle.white }}>Play</Nunito14Bold>
@@ -100,19 +106,21 @@ export default function Quiz() {
               </View>
             </View>
 
-            {exerciseCourseCate2.map((course, index) => {
+            {quiz2.map((quiz, index) => {
               return (
-                <View key={index} style={[styles.alignSelfCenter, styles.padding3vw, styles.flexRowBetweenCenter, { backgroundColor: colorStyle.fillBlur, width: vw(84), borderRadius: vw(4.5), paddingRight: vw(5) }]}>
+                <View key={index} style={[styles.alignSelfCenter, styles.padding4vw, styles.flexRowBetweenCenter, { backgroundColor: colorStyle.fillBlur, width: vw(84), borderRadius: vw(4.5) }]}>
                   <View style={[styles.flexRowStartCenter, styles.gap3vw]}>
-                    
+
                     <View style={[]}>
-                      <Nunito16Bold style={[styles.flex1, { color: colorStyle.main3, lineHeight: vw(8) }]}>{course.name}</Nunito16Bold>
-                      <Nunito12Reg style={[styles.flex1, { color: colorStyle.white }]}>{course.step.length} bước | {course.time} phút</Nunito12Reg>
+                      <Nunito16Bold style={[styles.flex1, { color: colorStyle.main3, lineHeight: vw(8) }]}>Level {quiz.level}</Nunito16Bold>
+                      <Nunito12Reg style={[{color:colorStyle.white}]}>Hoàn thành <Nunito12Bold style={{color:colorStyle.main3}}>{
+                        quiz.data.filter((question: any) => question.isDone).length
+                      }/{quiz.data.length}</Nunito12Bold> câu hỏi - {quiz.score} điểm</Nunito12Reg>
                     </View>
                   </View>
                   <TouchableOpacity
                     style={[componentStyle.outerGlowL1T1White, { borderRadius: vw(2) }]}
-                    onPress={() => { navigation.navigate('Quizing', { cate: 2, index: index }) }}>
+                    onPress={() => { navigation.navigate('Quizing', { cate: 2, level: quiz.level }) }}>
                     <Gradient2
                       style={[styles.flexRowCenter, styles.gap2vw, styles.paddingH2vw, styles.paddingV1vw, { borderRadius: vw(2) }]}>
                       <Nunito14Bold style={{ color: colorStyle.white }}>Play</Nunito14Bold>
@@ -132,19 +140,21 @@ export default function Quiz() {
               </View>
             </View>
 
-            {exerciseCourseCate2.map((course, index) => {
+            {quiz3.map((quiz, index) => {
               return (
-                <View key={index} style={[styles.alignSelfCenter, styles.padding3vw, styles.flexRowBetweenCenter, { backgroundColor: colorStyle.fillBlur, width: vw(84), borderRadius: vw(4.5), paddingRight: vw(5) }]}>
+                <View key={index} style={[styles.alignSelfCenter, styles.padding4vw, styles.flexRowBetweenCenter, { backgroundColor: colorStyle.fillBlur, width: vw(84), borderRadius: vw(4.5) }]}>
                   <View style={[styles.flexRowStartCenter, styles.gap3vw]}>
-                   
+
                     <View style={[]}>
-                      <Nunito16Bold style={[styles.flex1, { color: colorStyle.main3, lineHeight: vw(8) }]}>{course.name}</Nunito16Bold>
-                      <Nunito12Reg style={[styles.flex1, { color: colorStyle.white }]}>{course.step.length} bước | {course.time} phút</Nunito12Reg>
+                      <Nunito16Bold style={[styles.flex1, { color: colorStyle.main3, lineHeight: vw(8) }]}>Level {quiz.level}</Nunito16Bold>
+                      <Nunito12Reg style={[{color:colorStyle.white}]}>Hoàn thành <Nunito12Bold style={{color:colorStyle.main3}}>{
+                        quiz.data.filter((question: any) => question.isDone).length
+                      }/{quiz.data.length}</Nunito12Bold> câu hỏi - {quiz.score} điểm</Nunito12Reg>
                     </View>
                   </View>
                   <TouchableOpacity
                     style={[componentStyle.outerGlowL1T1White, { borderRadius: vw(2) }]}
-                    onPress={() => { navigation.navigate('Quizing', { cate: 2, index: index }) }}>
+                    onPress={() => { navigation.navigate('Quizing', { cate: 2, level: quiz.level }) }}>
                     <Gradient2
                       style={[styles.flexRowCenter, styles.gap2vw, styles.paddingH2vw, styles.paddingV1vw, { borderRadius: vw(2) }]}>
                       <Nunito14Bold style={{ color: colorStyle.white }}>Play</Nunito14Bold>
