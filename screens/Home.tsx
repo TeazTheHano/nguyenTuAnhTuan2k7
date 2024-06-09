@@ -13,7 +13,6 @@ export default function Home() {
     const navigation = useNavigation()
 
     const [userName, setUserName] = React.useState<string>('')
-    const [age, setAge] = React.useState<number>(0)
     const [exerciseCourseCate1, setExerciseCourseCate1] = React.useState<any[]>([])
     const [exerciseCourseCate2, setExerciseCourseCate2] = React.useState<any[]>([])
     const [loaddingExerciseCourse, setLoaddingExerciseCourse] = React.useState<boolean>(true)
@@ -25,7 +24,6 @@ export default function Home() {
             syncInBackground: true,
         }).then(res => {
             setUserName(res.name)
-            setAge(res.age)
         }).catch(err => {
             console.log(err)
         })

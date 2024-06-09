@@ -9,8 +9,8 @@ import { SvgXml } from 'react-native-svg'
 import storage, { getAllExerciseCourse, getAllQuiz, loadDefaultQuiz, loadDefautExerciseCourse } from '../data/storageFunc'
 import { statusBarTransparency } from '../assets/component'
 
-export default function Login() {
-  const navigation = useNavigation()
+export default function Login({ route, navigation }: any) {
+  const state = route.params?.state
 
   const [isExist, setIsExist] = useState<boolean | null>(null)
 
@@ -20,6 +20,19 @@ export default function Login() {
   const [height, setHeight] = useState<number>(0)
   const [weight, setWeight] = useState<number>(0)
   const [currentStep, setCurrentStep] = useState<number>(0)
+
+  useEffect(() => {
+    if (state) {
+      setCurrentStep(0)
+      setName('')
+      setSex(0)
+      setAge(2)
+      setHeight(0)
+      setWeight(0)
+    } else {
+      console.log('state', state);
+    }
+  }, [state])
 
   useEffect(() => {
     storage.load({

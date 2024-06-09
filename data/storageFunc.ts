@@ -1,6 +1,8 @@
 import Storage from 'react-native-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import data from './data';
+import {Alert} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const exerciseCourse = data().exerciseCourse;
 const quiz = data().quiz;
@@ -86,7 +88,16 @@ export const loadDefautExerciseCourse = () => {
 };
 
 export const clearExerciseAllData = () => {
-  storage.clearMapForKey('exerciseCourse');
+  storage
+    .clearMapForKey('exerciseCourse')
+    .then(() => {
+      console.log('Exercise course data cleared');
+      Alert.alert('Đã đặt lại dữ liệu bài tập');
+      loadDefautExerciseCourse();
+    })
+    .catch(err => {
+      console.log(err);
+    });
 };
 
 export const saveQuiz = (quiz: any, category: Number, level: Number) => {
@@ -122,13 +133,28 @@ export const loadDefaultQuiz = () => {
 };
 
 export const clearQuizAllData = () => {
-  storage.clearMapForKey('quiz');
+  storage
+    .clearMapForKey('quiz')
+    .then(() => {
+      console.log('Quiz data cleared');
+      Alert.alert('Đã đặt lại dữ liệu bài kiểm tra');
+      loadDefaultQuiz();
+    })
+    .catch(err => {
+      console.log(err);
+    });
 };
 
-export const clearAllData = () => {
-  storage.clearMapForKey('exerciseCourse');
-  storage.clearMapForKey('quiz');
-  storage.remove({
-    key: 'userInfo',
-  });
-}
+export const clearAllData = async () => {
+  const clear = async () => {
+    clearExerciseAllData();
+    clearQuizAllData();
+    await storage.remove({
+      key: 'userInfo',
+    });
+
+    Alert.alert('Đã xóa dữ liệu người dùng');
+  };
+
+  clear();
+};
