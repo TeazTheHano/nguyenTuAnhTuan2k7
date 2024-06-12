@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { marginBottomForScrollView, NavNavigation, statusBarTransparency, UlList } from '../assets/component'
 import styles, { vh, vw } from '../assets/stylesheet'
 import storage, { getQuiz } from '../data/storageFunc'
-import { Nunito12Reg, Nunito14Bold, Nunito16Bold, Nunito18Bold, Nunito20Bold, Signika20Bold } from '../assets/Class'
+import { Nunito12Reg, Nunito14Bold, Nunito16Bold, Nunito18Bold, Nunito20Bold, Signika20Bold, SonsieOne100 } from '../assets/Class'
 import { SvgXml } from 'react-native-svg'
 import { countDown0, countDown1, countDown2, countDown3, endGameIcon, infoIcon, leftArrow, quizLogoIcon, quizPeopleIcon, rightArrow, scoreBoard } from '../assets/svgXml'
 
@@ -19,6 +19,9 @@ export default function Quizing({ route, navigation }: any) {
     const [endingCountDown, setEndingCountDown] = React.useState<number>(10);
     const [isDone, setIsDone] = React.useState<boolean>(false);
     const [currentScore, setCurrentScore] = React.useState<number>(0);
+    const [startEndingCountDown, setStartEndingCountDown] = React.useState<boolean>(false);
+    const [isAnswerTrue, setIsAnswerTrue] = React.useState<boolean | undefined>(undefined);
+    const [selectedAnswer, setSelectedAnswer] = React.useState<number>(-1);
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -42,32 +45,55 @@ export default function Quizing({ route, navigation }: any) {
     }
     countDownTimer();
 
-    const endingCountDownTimer = (endingCountDown: number) => {
-        let x = endingCountDown - 1;
-        if (x >= 0) {
-            setTimeout(() => {
-                setEndingCountDown(x);
-                if (x == 0) {
-                    setTimeout(() => {
-                        setIsDone(true);
-                    }, 1000);
-                }
-                if (x > 0) {
-                    endingCountDownTimer(x);
-                }
-            }, 1000);
+    useEffect(() => {
+        if (countDown == 0) {
+            setStartEndingCountDown(true);
         }
-    }
+    }, [countDown]);
+
+    // const endingCountDownTimer = (endingCountDown: number) => {
+    //     let x = endingCountDown - 1;
+    //     if (x >= 0) {
+    //         setTimeout(() => {
+    //             setEndingCountDown(x);
+    //             if (x == 0) {
+    //                 if (currentStep < quiz.data.length - 1) {
+    //                     setTimeout(() => {
+    //                         setCurrentStep(currentStep + 1)
+    //                         setStartEndingCountDown(false);
+    //                         setTimeout(() => {
+    //                             setEndingCountDown(10);
+    //                             setStartEndingCountDown(true);
+    //                             resetCountDownBarAnimation()
+    //                         }, 500);
+    //                     }, 1000);
+    //                 } else {
+    //                     setIsDone(true);
+    //                 }
+    //             }
+    //             if (x > 0) {
+    //                 endingCountDownTimer(x);
+    //             }
+    //         }, 1000);
+    //     }
+    // }
+
+    useEffect(() => {
+        if (startEndingCountDown) {
+            // endingCountDownShortenAnimationFnc();
+            // trigger endingCountDownTimer
+        }
+    }, [startEndingCountDown]);
 
     const animation = useRef(new Animated.Value(0)).current;
 
-    const countDownShortenAnimation = animation.interpolate({
+    const endingCountDownShortenAnimation = animation.interpolate({
         inputRange: [0, 1],
         outputRange: [vw(70), vw(0)],
     });
 
-    const countDownShorten = () => {
-        endingCountDownTimer(endingCountDown)
+    function endingCountDownShortenAnimationFnc() {
+        // endingCountDownTimer(endingCountDown)
         Animated.timing(animation, {
             toValue: 1,
             duration: 10000,
@@ -75,24 +101,54 @@ export default function Quizing({ route, navigation }: any) {
         }).start();
     }
 
-    const endGameAnimation = animation.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0, 1],
-    });
-
-    const endGameAnimationFnc = () => {
+    function resetCountDownBarAnimation() {
         Animated.timing(animation, {
-            toValue: 1,
-            duration: 3000,
-            useNativeDriver: true,
+            toValue: 0,
+            duration: 0,
+            useNativeDriver: false,
         }).start();
     }
 
     useEffect(() => {
-        if (isDone) {
-            endGameAnimationFnc();
+        // reset answer status
+        setIsAnswerTrue(undefined);
+        setSelectedAnswer(-1);
+        // reset count down bar animation
+        resetCountDownBarAnimation();
+
+        setTimeout(() => {
+            setEndingCountDown(10);
+        }, 1000);
+
+    }, [currentStep]);
+
+    useEffect(() => {
+        if (startEndingCountDown == true && endingCountDown == 10) {
+            endingCountDownShortenAnimationFnc();
         }
-    }, [isDone]);
+        
+        if (startEndingCountDown == true && endingCountDown > 0) {
+            const timerID = setTimeout(() => {
+                setEndingCountDown(endingCountDown - 1);
+            }, 1000);
+            return () => clearTimeout(timerID);
+        }
+        if (startEndingCountDown == true && endingCountDown == 0) {
+            if (currentStep < quiz.data.length - 1) {
+                setTimeout(() => {
+                    setCurrentStep(currentStep + 1)
+                    setStartEndingCountDown(false);
+                    setEndingCountDown(10);
+                    setTimeout(() => {
+                        setStartEndingCountDown(true);
+                        resetCountDownBarAnimation()
+                    }, 500);
+                }, 1000);
+            } else {
+                setIsDone(true);
+            }
+        }
+    }, [endingCountDown, startEndingCountDown]);
 
     return (
         <Gradient2 style={[styles.flex1]}>
@@ -115,7 +171,7 @@ export default function Quizing({ route, navigation }: any) {
                                 <Nunito16Bold style={{ color: colorStyle.main3 }}>{quiz.category == 1 ? 'Nhập môn' : quiz.category == 2 ? 'Nghiệp dư' : 'Kình ngư'} <Nunito14Bold style={{ color: colorStyle.white }}>| Level {quiz.level} |</Nunito14Bold> {currentScore} điểm</Nunito16Bold>
                             </View>
                             {scoreBoard(vw(80), vw(40))}
-                            {/* score here */}
+                            <SonsieOne100>{currentScore}/{quiz.data.length}</SonsieOne100>
                             <View style={[styles.flexRowBetweenCenter, styles.w90]}>
                                 <TouchableOpacity
                                     onPress={() => {
@@ -126,10 +182,10 @@ export default function Quizing({ route, navigation }: any) {
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     onPress={() => {
-                                        // setCurrentStep(currentStep + 1);
+                                        navigation.navigate('Tab')
                                     }}
                                     style={[styles.border1, styles.w45, styles.marginTop2vw, styles.padding2vw, styles.borderRadius4vw, { borderColor: colorStyle.main3, marginBottom: vw(20) }]}>
-                                    <Nunito16Bold style={[styles.textCenter, { color: colorStyle.white }]}>Màn tiếp theo</Nunito16Bold>
+                                    <Nunito16Bold style={[styles.textCenter, { color: colorStyle.white }]}>Về trang chủ</Nunito16Bold>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -179,7 +235,7 @@ export default function Quizing({ route, navigation }: any) {
                                                     </View>
                                                 </Gradient1>
                                                 <View style={[styles.w70vw, styles.borderRadius100, { backgroundColor: colorStyle.fillBlur, height: vw(1.5), }]}>
-                                                    <Animated.View style={[styles.borderRadius100, { backgroundColor: colorStyle.main3, height: vw(1.5), width: countDownShortenAnimation }]}></Animated.View>
+                                                    <Animated.View style={[styles.borderRadius100, { backgroundColor: colorStyle.main3, height: vw(1.5), width: endingCountDownShortenAnimation }]}></Animated.View>
                                                 </View>
                                             </View>
                                         </View>
@@ -209,7 +265,7 @@ export default function Quizing({ route, navigation }: any) {
                                                     </View>
                                                 </Gradient1>
                                                 <View style={[styles.w70vw, styles.borderRadius100, { backgroundColor: colorStyle.fillBlur, height: vw(1.5), }]}>
-                                                    <Animated.View style={[styles.borderRadius100, { backgroundColor: colorStyle.main3, height: vw(1.5), width: countDownShortenAnimation }]}></Animated.View>
+                                                    <Animated.View style={[styles.borderRadius100, { backgroundColor: colorStyle.main3, height: vw(1.5), width: endingCountDownShortenAnimation }]}></Animated.View>
                                                 </View>
                                             </View>
                                             {/* end of COUNT DOWN BAR */}
@@ -233,18 +289,26 @@ export default function Quizing({ route, navigation }: any) {
                                                 renderItem={({ item, index }) => (
                                                     <TouchableOpacity
                                                         onPress={() => {
+                                                            setSelectedAnswer(index);
                                                             if (currentStep < quiz.data.length - 1) {
-                                                                setCurrentStep(currentStep + 1);
+                                                                setEndingCountDown(0);
+                                                                setTimeout(() => {
+                                                                    setCurrentStep(currentStep + 1)
+                                                                }, 1000);
                                                             } else {
-                                                                setIsDone(true);
+                                                                setTimeout(() => {
+                                                                    setIsDone(true);
+                                                                }, 1000);
                                                             }
 
                                                             if (index == quiz.data[currentStep].answer) {
                                                                 console.log('correct')
                                                                 setCurrentScore(currentScore + 1);
                                                                 quiz.score = currentScore + 1;
+                                                                setIsAnswerTrue(true);
                                                             } else {
                                                                 console.log('incorrect')
+                                                                setIsAnswerTrue(false);
                                                             }
                                                             quiz.data[currentStep].isDone = true;
                                                             quiz.data[currentStep].lastAnswer = index;
@@ -257,10 +321,8 @@ export default function Quizing({ route, navigation }: any) {
                                                             });
                                                         }}
                                                         key={index}
-                                                    >
-                                                        <View style={[styles.borderRadius3vw, styles.paddingH4vw, styles.paddingV2vw, styles.margin2vw, { backgroundColor: colorStyle.fillBlur, width: vw(40) }]}>
-                                                            <Nunito16Bold style={[styles.textCenter, { color: colorStyle.white }]}>{String.fromCharCode(65 + index)}: {item}</Nunito16Bold>
-                                                        </View>
+                                                        style={[styles.borderRadius3vw, styles.paddingH4vw, styles.paddingV2vw, styles.margin2vw, { backgroundColor: isAnswerTrue === false && selectedAnswer === index ? '#D00000CC' : isAnswerTrue === true && selectedAnswer === index ? colorStyle.main3 : colorStyle.fillBlur, width: vw(40) }]}>
+                                                        <Nunito16Bold style={[styles.textCenter, { color: colorStyle.white }]}>{String.fromCharCode(65 + index)}: {item}</Nunito16Bold>
                                                     </TouchableOpacity>
                                                 )}
                                             />

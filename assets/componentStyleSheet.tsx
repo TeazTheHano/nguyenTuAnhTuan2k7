@@ -20,13 +20,8 @@ export default colorStyle;
 
 export const componentStyle = StyleSheet.create<any>({
     // input 
-    textInput: {
-        borderRadius: vw(4),
-        flex: 1,
-        paddingVertical: vw(4),
-        fontSize: vw(4),
-    },
-
+    textInput: { fontFamily: 'Nunito-Bold', fontSize: vw(5), color: colorStyle.main3, backgroundColor: 'rgba(0,0,0,0)', borderRadius: vw(2), width: vw(60) },
+    textInputEdit: { fontFamily: 'Nunito-Regular', fontSize: vw(4), color: 'black', backgroundColor: 'white', borderRadius: vw(2), width: vw(60), paddingHorizontal: vw(2), paddingVertical: vw(0.5), },
     outerGlowL1T1White: {
         shadowOffset: { width: -1, height: -1 },
         shadowOpacity: 0.5,

@@ -84,6 +84,10 @@
     {
       "path": "assets/fonts/Signika-SemiBold.ttf",
       "sha1": "0dea78c92b3980ba4597930bce13caa7b8aa21b9"
+    },
+    {
+      "path": "assets/fonts/SonsieOne-Regular.ttf",
+      "sha1": "e32d5771906b6104a1245daeb3d315d61a42c391"
     }
   ]
 }

@@ -18,25 +18,25 @@ export default function Home() {
     const [loaddingExerciseCourse, setLoaddingExerciseCourse] = React.useState<boolean>(true)
 
     useEffect(() => {
-        storage.load({
-            key: 'userInfo',
-            autoSync: true,
-            syncInBackground: true,
-        }).then(res => {
-            setUserName(res.name)
-        }).catch(err => {
-            console.log(err)
+        const unsubscribe = navigation.addListener('focus', () => {
+            storage.load({
+                key: 'userInfo',
+                autoSync: true,
+                syncInBackground: true,
+            }).then(res => {
+                setUserName(res.name)
+            }).catch(err => {
+                console.log(err)
+            })
+            getAllExerciseCourse().then(res => {
+                setExerciseCourseCate1(res.filter(course => course.category === 1))
+                setExerciseCourseCate2(res.filter(course => course.category === 2))
+                setLoaddingExerciseCourse(false)
+            }).catch(err => {
+                console.log(err)
+            })
         })
-    }, [])
-
-    useEffect(() => {
-        getAllExerciseCourse().then(res => {
-            setExerciseCourseCate1(res.filter(course => course.category === 1))
-            setExerciseCourseCate2(res.filter(course => course.category === 2))
-            setLoaddingExerciseCourse(false)
-        }).catch(err => {
-            console.log(err)
-        })
+        return unsubscribe
     }, [])
 
     return (

@@ -33,8 +33,8 @@ export const statusBarTransparency = (lightContent: boolean = true) => {
     return (
         <View>
             <StatusBar barStyle={lightContent ? 'light-content' : 'dark-content'}
-            backgroundColor='rgba(0,0,0,0)'
-            translucent={true}
+                backgroundColor='rgba(0,0,0,0)'
+                translucent={true}
             />
             <View style={{ width: vw(100), height: statusBarHeight }}></View>
         </View>
@@ -64,11 +64,12 @@ export const onShare = async () => {
 };
 
 
-export const HomeNameBar = (userName: string) => {
+export const HomeNameBar = (userName: string, editable?: boolean) => {
     let date = new Date();
+    const navigation = useNavigation()
 
     function showInfoBtn() {
-        clearExerciseAllData()
+        navigation.navigate('User')
     }
 
     return (
@@ -80,12 +81,12 @@ export const HomeNameBar = (userName: string) => {
                 <Nunito16Bold style={[{ color: colorStyle.main3 }]}>Hello, {userName}</Nunito16Bold>
                 <Nunito14Reg style={[{ color: colorStyle.main3 }]}>{date.toDateString()}</Nunito14Reg>
             </View>
-            <TouchableOpacity style={[componentStyle.outerGlowL1T1White, { borderRadius: vw(5.5) }]}
+            {!editable ? <TouchableOpacity style={[componentStyle.outerGlowL1T1White, { borderRadius: vw(5.5) }]}
                 onPress={() => { showInfoBtn() }}>
                 <Gradient2 style={[{ padding: vw(1.5), borderRadius: vw(5.5) }]}>
                     <SvgXml xml={`<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 7.00999V7M20 13V9.5M6.5 21.0001H17.5C18.8807 21.0001 20 19.8808 20 18.5001C20 14.4194 14 14.5001 12 14.5001C10 14.5001 4 14.4194 4 18.5001C4 19.8808 5.11929 21.0001 6.5 21.0001ZM16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" stroke="#FBFBFB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>`} width={vw(6)} height={vw(6)} />
                 </Gradient2>
-            </TouchableOpacity>
+            </TouchableOpacity> : <></>}
         </View>
     )
 }

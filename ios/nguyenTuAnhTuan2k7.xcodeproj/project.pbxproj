@@ -36,6 +36,7 @@
 		BA1774DA47934B75ABDBAFA2 /* Signika-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 84C91AAC331F44AD8E515F17 /* Signika-Medium.ttf */; };
 		99C8B702D4E84D32B46E5A61 /* Signika-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0FF34AE0927F47FA8F9BE256 /* Signika-Regular.ttf */; };
 		6C9735D0641E4F35B11596CB /* Signika-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 53999C88837D48C3B30E87D4 /* Signika-SemiBold.ttf */; };
+		0DE00302A3C84737BEBC090A /* SonsieOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5FE914AC4436490B976EC720 /* SonsieOne-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +90,7 @@
 		84C91AAC331F44AD8E515F17 /* Signika-Medium.ttf */ = {isa = PBXFileReference; name = "Signika-Medium.ttf"; path = "../assets/fonts/Signika-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		0FF34AE0927F47FA8F9BE256 /* Signika-Regular.ttf */ = {isa = PBXFileReference; name = "Signika-Regular.ttf"; path = "../assets/fonts/Signika-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		53999C88837D48C3B30E87D4 /* Signika-SemiBold.ttf */ = {isa = PBXFileReference; name = "Signika-SemiBold.ttf"; path = "../assets/fonts/Signika-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		5FE914AC4436490B976EC720 /* SonsieOne-Regular.ttf */ = {isa = PBXFileReference; name = "SonsieOne-Regular.ttf"; path = "../assets/fonts/SonsieOne-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -220,6 +222,7 @@
 				84C91AAC331F44AD8E515F17 /* Signika-Medium.ttf */,
 				0FF34AE0927F47FA8F9BE256 /* Signika-Regular.ttf */,
 				53999C88837D48C3B30E87D4 /* Signika-SemiBold.ttf */,
+				5FE914AC4436490B976EC720 /* SonsieOne-Regular.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -342,6 +345,7 @@
 				BA1774DA47934B75ABDBAFA2 /* Signika-Medium.ttf in Resources */,
 				99C8B702D4E84D32B46E5A61 /* Signika-Regular.ttf in Resources */,
 				6C9735D0641E4F35B11596CB /* Signika-SemiBold.ttf in Resources */,
+				0DE00302A3C84737BEBC090A /* SonsieOne-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

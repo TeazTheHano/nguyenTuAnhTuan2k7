@@ -256,3 +256,15 @@ export class Signika28Bold extends Component<{ children: React.ReactNode, style?
         );
     }
 }
+
+export class SonsieOne100 extends Component<{ children: React.ReactNode, style?: any }> {
+    render() {
+        const { children, style } = this.props;
+
+        return (
+            <Text style={[{ fontFamily: 'SonsieOne-Regular', fontSize: vw(25), color: '#85C5C9' }, style]}>
+                {children}
+            </Text>
+        );
+    }
+}

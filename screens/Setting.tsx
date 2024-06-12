@@ -1,4 +1,5 @@
 import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native'
+import { Linking } from 'react-native'
 import React, { useEffect } from 'react'
 import storage, { clearAllData, clearExerciseAllData, clearQuizAllData } from '../data/storageFunc'
 import { HomeNameBar, statusBarTransparency } from '../assets/component'
@@ -13,15 +14,18 @@ export default function Setting() {
   const navigation = useNavigation()
 
   useEffect(() => {
-    storage.load({
-      key: 'userInfo',
-      autoSync: true,
-      syncInBackground: true,
-    }).then(res => {
-      setUserName(res.name)
-    }).catch(err => {
-      console.log(err)
+    const unsubscribe = navigation.addListener('focus', () => {
+      storage.load({
+        key: 'userInfo',
+        autoSync: true,
+        syncInBackground: true,
+      }).then(res => {
+        setUserName(res.name)
+      }).catch(err => {
+        console.log(err)
+      })
     })
+    return unsubscribe
   }, [])
 
   interface BtnProps {
@@ -33,7 +37,9 @@ export default function Setting() {
   let BtnData: BtnProps[] = [
     {
       title: 'Liên lạc với chúng tôi',
-      onPress: () => { },
+      onPress: () => {
+        Linking.openURL('mailto:' + 'teaz.pseg@gmail.com' + '?subject=Feed back&body=Your message')
+      },
       icon: contactIcon(vw(6), vw(6)),
     },
     {

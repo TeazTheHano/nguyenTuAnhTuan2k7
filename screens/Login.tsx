@@ -22,16 +22,19 @@ export default function Login({ route, navigation }: any) {
   const [currentStep, setCurrentStep] = useState<number>(0)
 
   useEffect(() => {
-    if (state) {
-      setCurrentStep(0)
-      setName('')
-      setSex(0)
-      setAge(2)
-      setHeight(0)
-      setWeight(0)
-    } else {
-      console.log('state', state);
-    }
+    const unsubscribe = navigation.addListener('focus', () => {
+      if (state) {
+        setCurrentStep(0)
+        setName('')
+        setSex(0)
+        setAge(2)
+        setHeight(0)
+        setWeight(0)
+      } else {
+        console.log('state', state);
+      }
+    })
+    return unsubscribe
   }, [state])
 
   useEffect(() => {

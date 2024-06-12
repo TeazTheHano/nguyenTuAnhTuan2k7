@@ -20,20 +20,17 @@ export default function Quiz() {
   const [loaddingExercisequiz, setLoaddingExerciseQuiz] = React.useState<boolean>(true)
 
   useEffect(() => {
-    storage.load({
-      key: 'userInfo',
-      autoSync: true,
-      syncInBackground: true,
-    }).then(res => {
-      setUserName(res.name)
-      setAge(res.age)
-    }).catch(err => {
-      console.log(err)
-    })
-  }, [])
-
-  useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
+      storage.load({
+        key: 'userInfo',
+        autoSync: true,
+        syncInBackground: true,
+      }).then(res => {
+        setUserName(res.name)
+        setAge(res.age)
+      }).catch(err => {
+        console.log(err)
+      })
       getAllQuiz().then(res => {
         setQuiz1(res.filter(quiz => quiz.category === 1))
         seQuiz2(res.filter(quiz => quiz.category === 2))
@@ -79,7 +76,7 @@ export default function Quiz() {
 
                     <View style={[]}>
                       <Nunito16Bold style={[styles.flex1, { color: colorStyle.main3, lineHeight: vw(8) }]}>Level {quiz.level}</Nunito16Bold>
-                      <Nunito12Reg style={[{color:colorStyle.white}]}>Hoàn thành <Nunito12Bold style={{color:colorStyle.main3}}>{
+                      <Nunito12Reg style={[{ color: colorStyle.white }]}>Hoàn thành <Nunito12Bold style={{ color: colorStyle.main3 }}>{
                         quiz.data.filter((question: any) => question.isDone).length
                       }/{quiz.data.length}</Nunito12Bold> câu hỏi - {quiz.score} điểm</Nunito12Reg>
                     </View>
@@ -113,7 +110,7 @@ export default function Quiz() {
 
                     <View style={[]}>
                       <Nunito16Bold style={[styles.flex1, { color: colorStyle.main3, lineHeight: vw(8) }]}>Level {quiz.level}</Nunito16Bold>
-                      <Nunito12Reg style={[{color:colorStyle.white}]}>Hoàn thành <Nunito12Bold style={{color:colorStyle.main3}}>{
+                      <Nunito12Reg style={[{ color: colorStyle.white }]}>Hoàn thành <Nunito12Bold style={{ color: colorStyle.main3 }}>{
                         quiz.data.filter((question: any) => question.isDone).length
                       }/{quiz.data.length}</Nunito12Bold> câu hỏi - {quiz.score} điểm</Nunito12Reg>
                     </View>
@@ -147,7 +144,7 @@ export default function Quiz() {
 
                     <View style={[]}>
                       <Nunito16Bold style={[styles.flex1, { color: colorStyle.main3, lineHeight: vw(8) }]}>Level {quiz.level}</Nunito16Bold>
-                      <Nunito12Reg style={[{color:colorStyle.white}]}>Hoàn thành <Nunito12Bold style={{color:colorStyle.main3}}>{
+                      <Nunito12Reg style={[{ color: colorStyle.white }]}>Hoàn thành <Nunito12Bold style={{ color: colorStyle.main3 }}>{
                         quiz.data.filter((question: any) => question.isDone).length
                       }/{quiz.data.length}</Nunito12Bold> câu hỏi - {quiz.score} điểm</Nunito12Reg>
                     </View>

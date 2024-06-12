@@ -87,12 +87,12 @@ export const loadDefautExerciseCourse = () => {
   });
 };
 
-export const clearExerciseAllData = () => {
+export const clearExerciseAllData = (alert?: boolean = true) => {
   storage
     .clearMapForKey('exerciseCourse')
     .then(() => {
       console.log('Exercise course data cleared');
-      Alert.alert('Đã đặt lại dữ liệu bài tập');
+      alert ? Alert.alert('Đã đặt lại dữ liệu bài tập') : null;
       loadDefautExerciseCourse();
     })
     .catch(err => {
@@ -132,12 +132,12 @@ export const loadDefaultQuiz = () => {
   });
 };
 
-export const clearQuizAllData = () => {
+export const clearQuizAllData = (alert: boolean = true) => {
   storage
     .clearMapForKey('quiz')
     .then(() => {
       console.log('Quiz data cleared');
-      Alert.alert('Đã đặt lại dữ liệu bài kiểm tra');
+      alert ? Alert.alert('Đã đặt lại dữ liệu bài kiểm tra') : null;
       loadDefaultQuiz();
     })
     .catch(err => {
@@ -147,8 +147,8 @@ export const clearQuizAllData = () => {
 
 export const clearAllData = async () => {
   const clear = async () => {
-    clearExerciseAllData();
-    clearQuizAllData();
+    clearExerciseAllData(false);
+    clearQuizAllData(false);
     await storage.remove({
       key: 'userInfo',
     });
