@@ -91,7 +91,7 @@ export default function ExerciseCourse({ route, navigation }: any) {
 
     return (
         <Gradient2 style={[styles.flex1]}>
-            {statusBarTransparency()}
+            {/* {statusBarTransparency()}/ */}
             <SafeAreaView style={[styles.flex1,]}>
                 {NavNavigation('Trang chủ')}
 
